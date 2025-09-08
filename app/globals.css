@@ -17,3 +17,29 @@ body {
   }
 }
 
+@layer components {
+  /* Donna showcase responsive grid */
+  .donna-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto auto auto auto auto auto;
+    grid-template-areas:
+      "logo logo"
+      "description description"
+      "palette search"
+      "placeholder placeholder"
+      "video video"
+      "video video";
+  }
+  
+  @media (min-width: 768px) {
+    .donna-grid {
+      grid-template-columns: 2fr 1fr 1fr;
+      grid-template-rows: min-content auto 1fr;
+      grid-template-areas:
+        "logo description palette"
+        "search description placeholder"
+        "video video video";
+    }
+  }
+}
+

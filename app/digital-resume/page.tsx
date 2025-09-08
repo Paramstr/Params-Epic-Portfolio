@@ -6,28 +6,6 @@ import { LenisProvider } from "../components/LenisProvider";
 
 const gridItems = [
   { type: "project", id: "donna", title: "Donna", size: "medium", hasGif: true, hasCaption: true, description: "AI-powered RAG system combining semantic and lexical search for enterprise knowledge management." },
-  { type: "text", id: "text1", content: "I believe in building products that demand obsession. The kind of work that keeps you up at night—not because it's broken, but because you can see how perfect it could be. Every detail matters. Every interaction is an opportunity to delight or disappoint." },
-  { type: "project", id: "visual1", size: "large", hasGif: true, hasCaption: false },
-  { type: "project", id: "ethos", title: "Ethos", size: "wide", hasGif: true, hasCaption: true, description: "Next-generation financial dashboards built for institutional traders. Real-time market data visualization with progressive disclosure patterns and intelligent information hierarchy." },
-  { type: "divider", id: "div1" },
-  { type: "text", id: "philosophy", content: "My approach combines deep technical expertise with strategic product thinking. I don't just build features—I architect experiences. Each project begins with understanding the human need, then crafting technology that feels inevitable." },
-  { type: "project", id: "massive1", title: "Neural Canvas", size: "massive", hasGif: true, hasCaption: true, description: "Machine learning-powered creative platform for infinite visual compositions. Built with TensorFlow.js and custom WebGL shaders for real-time generative art creation." },
-  { type: "spacer", id: "spacer1" },
-  { type: "project", id: "visual2", size: "tall", hasGif: true, hasCaption: false },
-  { type: "text", id: "text2", content: "Design is not decoration. It's the manifestation of intent. When users interact with interfaces I've crafted, they shouldn't think about the technology—they should feel empowered by it. The best products disappear, leaving only capability." },
-  { type: "project", id: "flow", title: "Flow Voice AI", size: "medium", hasGif: true, hasCaption: true, description: "Conversational AI interface with natural language processing. Features advanced speech recognition, contextual understanding, and adaptive response generation." },
-  { type: "project", id: "visual3", size: "wide", hasGif: true, hasCaption: false },
-  { type: "project", id: "kinetic", title: "Kinetic Lab", size: "square", hasGif: true, hasCaption: true, description: "Research initiative exploring micro-interactions and motion design. Over 150 animation studies documenting the psychology of interface transitions." },
-  { type: "divider", id: "div2" },
-  { type: "text", id: "expertise", content: "Seven years building products that scale. From early-stage startups to enterprise platforms serving millions of users. My toolkit spans the full stack: React, Node.js, Python, cloud architecture, and emerging technologies like WebGPU and WebAssembly." },
-  { type: "project", id: "massive2", title: "Immersive Data Landscapes", size: "massive", hasGif: true, hasCaption: true, description: "Three.js and WebXR experiments in spatial data visualization. Real-time rendering of complex datasets in virtual and augmented reality environments for Fortune 500 analytics teams." },
-  { type: "text", id: "text3", content: "Code is poetry. Architecture is philosophy. Every function, every component, every abstraction tells a story about the problem it solves. I write software that other developers want to work with." },
-  { type: "project", id: "visual4", size: "tall", hasGif: true, hasCaption: false },
-  { type: "project", id: "algo", title: "Algorithm Visualizer", size: "large", hasGif: true, hasCaption: true, description: "Interactive educational platform for computer science concepts. Custom rendering engine built with Canvas API and WebGL for real-time algorithm visualization and teaching." },
-  { type: "spacer", id: "spacer2" },
-  { type: "text", id: "vision", content: "The future belongs to builders who understand both craft and commerce. Technical excellence without market understanding builds impressive demos. Business acumen without engineering depth builds fragile foundations. I bridge both worlds." },
-  { type: "project", id: "visual5", size: "wide", hasGif: true, hasCaption: false },
-  { type: "text", id: "collaboration", content: "I thrive in collaborative environments where diverse perspectives collide to create breakthrough solutions. Whether leading technical architecture decisions or contributing to product strategy, I bring both execution excellence and strategic thinking to every project." },
 ];
 
 const GridCard = ({ item, index }: { item: any; index: number }) => {
@@ -41,7 +19,7 @@ const GridCard = ({ item, index }: { item: any; index: number }) => {
         whileInView={{ opacity: 1, scaleX: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8, delay: index * 0.1 }}
-        className="col-span-full h-px bg-neutral-300 my-8 md:my-12"
+        className="col-span-full h-px bg-neutral-300 my-6 md:my-8 lg:my-12"
         style={{ gridColumn: "1 / -1" }}
       />
     );
@@ -65,9 +43,9 @@ const GridCard = ({ item, index }: { item: any; index: number }) => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6, delay: index * 0.1 }}
-        className="col-span-2 md:col-span-3 flex items-center py-4"
+        className="col-span-2 md:col-span-3 lg:col-span-4 xl:col-span-3 flex items-center py-4 md:py-6"
       >
-        <p className="text-neutral-700 text-[clamp(1rem,2vw,1.2rem)] leading-[1.6] text-left font-normal max-w-md">
+        <p className="text-neutral-700 text-[clamp(0.9rem,2.5vw,1.2rem)] leading-[1.6] text-left font-normal max-w-none md:max-w-md">
           {item.content}
         </p>
       </motion.div>
@@ -83,7 +61,7 @@ const GridCard = ({ item, index }: { item: any; index: number }) => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6, delay: index * 0.1 }}
-        className="col-span-8 row-span-4 relative"
+        className="col-span-2 md:col-span-4 lg:col-span-6 xl:col-span-8 row-span-6 md:row-span-4 relative"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -112,16 +90,7 @@ const GridCard = ({ item, index }: { item: any; index: number }) => {
         </div>
 
         {/* Tight masonry grid - content-aware layout */}
-        <div className="grid gap-3 h-full"
-             style={{
-               gridTemplateColumns: "2fr 1fr 1fr",
-               gridTemplateRows: "min-content auto 1fr",
-               gridTemplateAreas: `
-                 "logo description palette"
-                 "search description placeholder"
-                 "video video video"
-               `
-             }}>
+        <div className="grid gap-2 md:gap-3 h-full donna-grid">
 
           {/* Logo card - large logo with overflow clipping */}
           <div className="bg-black rounded-xl overflow-hidden border border-neutral-200/30 flex items-center justify-center"
@@ -130,14 +99,14 @@ const GridCard = ({ item, index }: { item: any; index: number }) => {
           </div>
 
           {/* Description - tall content area */}
-          <div className="bg-white  rounded-xl border border-neutral-200/30 p-4 flex flex-col justify-start"
+          <div className="bg-white  rounded-xl border border-neutral-200/30 p-3 md:p-4 flex flex-col justify-start"
                style={{ gridArea: "description" }}>
-            <div className="mb-4">
-              <h2 className="text-neutral-900 font-semibold text-2xl mb-1 leading-tight">Donna</h2>
+            <div className="mb-3 md:mb-4">
+              <h2 className="text-neutral-900 font-semibold text-xl md:text-2xl mb-1 leading-tight">Donna</h2>
               <p className="text-neutral-500 text-xs uppercase tracking-wide font-medium">AI Search Reimagined</p>
             </div>
             
-            <div className="space-y-3">
+            <div className="space-y-2 md:space-y-3">
               <p className="text-neutral-800 text-sm font-medium leading-snug">
                 The future of enterprise knowledge retrieval
               </p>
@@ -235,7 +204,7 @@ const GridCard = ({ item, index }: { item: any; index: number }) => {
           </div>
 
           {/* Search Video - natural 16:10 ratio */}
-          <div className="bg-white rounded-xl overflow-hidden border border-neutral-200/30 relative flex items-center justify-center p-3"
+          <div className="bg-white rounded-xl overflow-hidden border border-neutral-200/30 relative flex items-center justify-center p-2 md:p-3"
                style={{ gridArea: "search" }}>
             <div className="w-full aspect-[16/10]">
               <video
@@ -244,13 +213,13 @@ const GridCard = ({ item, index }: { item: any; index: number }) => {
                 loop
                 muted
                 playsInline
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain rounded"
               />
             </div>
           </div>
 
           {/* Video - spans full width bottom */}
-          <div className="bg-white rounded-xl overflow-hidden border border-neutral-200/30 relative flex items-center justify-center p-3"
+          <div className="bg-white rounded-xl overflow-hidden border border-neutral-200/30 relative flex items-center justify-center p-2 md:p-3"
                style={{ gridArea: "video" }}>
             <div className="w-full aspect-[16/9] rounded-xl">
               <video
@@ -259,7 +228,7 @@ const GridCard = ({ item, index }: { item: any; index: number }) => {
                 loop
                 muted
                 playsInline
-                className="w-full h-full object-contain "
+                className="w-full h-full object-contain rounded"
               />
             </div>
             <div className="absolute top-2 left-2 bg-black/60 backdrop-blur-sm px-2 py-1 rounded text-xs text-white">Flow Demo</div>
@@ -280,11 +249,11 @@ const GridCard = ({ item, index }: { item: any; index: number }) => {
       className={`
         group cursor-pointer relative
         ${item.size === "square" ? "col-span-1 row-span-1" : ""}
-        ${item.size === "medium" ? "col-span-2 row-span-1" : ""}
-        ${item.size === "large" ? "col-span-2 row-span-2" : ""}
-        ${item.size === "wide" ? "col-span-3 row-span-1" : ""}
-        ${item.size === "tall" ? "col-span-1 row-span-2" : ""}
-        ${item.size === "massive" ? "col-span-4 md:col-span-5 lg:col-span-7 row-span-2" : ""}
+        ${item.size === "medium" ? "col-span-2 md:col-span-2 row-span-1" : ""}
+        ${item.size === "large" ? "col-span-2 md:col-span-2 row-span-2" : ""}
+        ${item.size === "wide" ? "col-span-2 md:col-span-3 lg:col-span-3 row-span-1" : ""}
+        ${item.size === "tall" ? "col-span-1 md:col-span-1 row-span-2" : ""}
+        ${item.size === "massive" ? "col-span-2 md:col-span-4 lg:col-span-5 xl:col-span-7 row-span-2 md:row-span-2" : ""}
       `}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -307,13 +276,13 @@ const GridCard = ({ item, index }: { item: any; index: number }) => {
 
         {/* Text Content Overlay - Only if hasCaption */}
         {item.hasCaption && (
-          <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 bg-gradient-to-t from-black/90 via-black/70 to-transparent">
-            <h3 className="text-white font-medium text-[clamp(0.9rem,1.8vw,1.1rem)] leading-tight mb-1">
+          <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4 lg:p-6 bg-gradient-to-t from-black/90 via-black/70 to-transparent">
+            <h3 className="text-white font-medium text-[clamp(0.8rem,2vw,1.1rem)] leading-tight mb-1">
               {item.title}
             </h3>
             
             <motion.p 
-              className="text-white/80 text-[clamp(0.8rem,1.4vw,0.9rem)] leading-relaxed text-left"
+              className="text-white/80 text-[clamp(0.7rem,1.5vw,0.9rem)] leading-relaxed text-left"
               initial={{ opacity: 0.7 }}
               animate={{ opacity: isHovered ? 1 : 0.7 }}
               transition={{ duration: 0.2 }}
@@ -333,13 +302,13 @@ export default function DigitalResumePage() {
       <main className="min-h-screen bg-neutral-100">
         
         {/* Hero Section */}
-        <section className="min-h-screen flex flex-col justify-center px-8 md:px-16">
+        <section className="min-h-screen flex flex-col justify-center px-4 md:px-8 lg:px-16">
           <div className="max-w-4xl">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="mb-8"
+              className="mb-6 md:mb-8"
             >
               <span className="text-neutral-400 text-sm tracking-[0.2em] uppercase">
                 Frame 3678
@@ -350,12 +319,12 @@ export default function DigitalResumePage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="mb-16"
+              className="mb-12 md:mb-16"
             >
-              <h1 className="text-black font-normal text-[clamp(1.2rem,3vw,1.5rem)] leading-[1.2] mb-2">
+              <h1 className="text-black font-normal text-[clamp(1.2rem,4vw,1.5rem)] leading-[1.2] mb-2">
                 Param
               </h1>
-              <h2 className="text-black font-normal text-[clamp(1.2rem,3vw,1.5rem)] leading-[1.2]">
+              <h2 className="text-black font-normal text-[clamp(1.2rem,4vw,1.5rem)] leading-[1.2]">
                 Product Engineer
               </h2>
             </motion.div>
@@ -364,7 +333,7 @@ export default function DigitalResumePage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.6 }}
-              className="text-black font-normal text-[clamp(2.5rem,8vw,5rem)] leading-[1.1] tracking-[-0.02em] mb-12 max-w-3xl"
+              className="text-black font-normal text-[clamp(2rem,8vw,5rem)] leading-[1.1] tracking-[-0.02em] mb-8 md:mb-12 max-w-3xl"
             >
               Interfaces that feel natural.
             </motion.h3>
@@ -373,7 +342,7 @@ export default function DigitalResumePage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.8 }}
-              className="text-neutral-700 text-[clamp(1rem,2vw,1.1rem)] leading-[1.6] max-w-2xl"
+              className="text-neutral-700 text-[clamp(1rem,2.5vw,1.1rem)] leading-[1.6] max-w-2xl"
             >
               I care about building products that require a level of illness. An utter thanklessness of what it is, what it offers and completely in devotion to what it could be.
             </motion.p>
@@ -381,13 +350,14 @@ export default function DigitalResumePage() {
         </section>
 
         {/* Dynamic Grid Section */}
-        <section className="py-16 md:py-24 px-8 md:px-16 overflow-hidden">
-          <div className="max-w-[120vw] mx-auto">
+        <section className="py-12 md:py-16 lg:py-24 px-4 md:px-8 lg:px-16 overflow-hidden">
+          <div className="max-w-[100vw] md:max-w-[120vw] mx-auto">
             <div className="
-              grid gap-4 md:gap-6 lg:gap-8
+              grid gap-3 md:gap-4 lg:gap-6 xl:gap-8
               grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8
-              auto-rows-[minmax(120px,auto)]
-              md:auto-rows-[minmax(160px,auto)]
+              auto-rows-[minmax(100px,auto)]
+              md:auto-rows-[minmax(140px,auto)]
+              lg:auto-rows-[minmax(160px,auto)]
             ">
               {gridItems.map((item, index) => (
                 <GridCard key={item.id} item={item} index={index} />
