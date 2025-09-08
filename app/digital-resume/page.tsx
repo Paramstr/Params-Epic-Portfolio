@@ -6,6 +6,7 @@ import { LenisProvider } from "../components/LenisProvider";
 
 const gridItems = [
   { type: "project", id: "donna", title: "Donna", size: "medium", hasGif: true, hasCaption: true, description: "AI-powered RAG system combining semantic and lexical search for enterprise knowledge management." },
+  { type: "figma", id: "donna-figma", title: "OMNI - Bali", figmaUrl: "https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Fdesign%2Fl3MLIb0U9yFnRrLnhtlHb9%2FOmni-web-First-Draft--Param-%3Fm%3Dauto%26t%3DqOFOcBmYpB8I7QI6-1"}
 ];
 
 const GridCard = ({ item, index }: { item: any; index: number }) => {
@@ -48,6 +49,86 @@ const GridCard = ({ item, index }: { item: any; index: number }) => {
         <p className="text-neutral-700 text-[clamp(0.9rem,2.5vw,1.2rem)] leading-[1.6] text-left font-normal max-w-none md:max-w-md">
           {item.content}
         </p>
+      </motion.div>
+    );
+  }
+
+  // Figma embed component
+  if (item.type === "figma") {
+    return (
+      <motion.div
+        key={item.id}
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: index * 0.1 }}
+        className="col-span-2 md:col-span-4 lg:col-span-6 xl:col-span-8 row-span-4 md:row-span-6 relative mt-16 md:mt-20 lg:mt-24"
+      >
+        {/* Title Section */}
+        <div className="mb-6 md:mb-8">
+          <h3 className="text-2xl md:text-3xl font-light text-neutral-900 tracking-tight">{item.title}</h3>
+          <div className="flex items-center gap-2 mt-2">
+            <div className="w-1 h-1 bg-neutral-400 rounded-full"></div>
+            <p className="text-sm text-neutral-500 font-medium tracking-wide uppercase">Interactive Design Prototype</p>
+          </div>
+        </div>
+
+        {/* Enhanced Figma Embed */}
+        <div className="relative group">
+          {/* Subtle glow effect */}
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-neutral-100 to-neutral-50 rounded-xl blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
+          
+          {/* Main iframe container */}
+          <div className="relative w-full h-[450px] md:h-[550px] lg:h-[650px] rounded-xl overflow-hidden border border-neutral-200/80 bg-white shadow-lg shadow-neutral-200/50 backdrop-blur-sm">
+            <iframe
+              src={item.figmaUrl}
+              width="100%"
+              height="100%"
+              allowFullScreen
+              className="border-0 bg-white"
+              title={item.title}
+              loading="lazy"
+            />
+          </div>
+          
+          {/* Overlay for loading state */}
+          <div className="absolute inset-0 bg-neutral-50 rounded-xl flex items-center justify-center pointer-events-none opacity-0 group-hover:opacity-0 transition-opacity duration-300">
+            <div className="flex items-center gap-2 text-neutral-400">
+              <div className="w-2 h-2 bg-neutral-300 rounded-full animate-pulse"></div>
+              <span className="text-sm font-medium">Loading Figma...</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Enhanced View in Figma Link */}
+        <div className="flex justify-between items-center mt-6">
+          <div className="text-xs text-neutral-400 font-mono">
+            Design System • Interactive Prototype
+          </div>
+          <a 
+            href={item.figmaUrl.replace('embed?embed_host=share&url=', '').replace(/%3A/g, ':').replace(/%2F/g, '/')} 
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center gap-2 px-4 py-2 text-neutral-700 hover:text-neutral-900 hover:bg-neutral-50 rounded-lg transition-all duration-300 text-sm font-medium border border-transparent hover:border-neutral-200"
+          >
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M15.852 8.981h-4.588V0h4.588c2.476 0 4.49 2.014 4.49 4.49s-2.014 4.491-4.49 4.491zM12.735 7.51h3.117c1.665 0 3.019-1.355 3.019-3.019s-1.354-3.019-3.019-3.019h-3.117V7.51zm0 1.471H8.148c-2.476 0-4.49-2.015-4.49-4.49S5.672 0 8.148 0h4.588v8.981zm-4.587-7.51c-1.665 0-3.019 1.355-3.019 3.019s1.354 3.02 3.019 3.02h3.117V1.471H8.148zm4.587 15.019H8.148c-2.476 0-4.49-2.014-4.49-4.49s2.014-4.49 4.49-4.49h4.588v8.98zM8.148 8.981c-1.665 0-3.019 1.355-3.019 3.019s1.355 3.019 3.019 3.019h3.117V8.981H8.148zM8.172 24c-2.489 0-4.515-2.014-4.515-4.49s2.014-4.49 4.49-4.49h4.588v4.441c0 2.503-2.047 4.539-4.563 4.539zm-.024-7.51a3.023 3.023 0 0 0-3.019 3.019c0 1.665 1.365 3.019 3.044 3.019 1.705 0 3.093-1.376 3.093-3.068v-2.97H8.148z"/>
+            </svg>
+            <span className="relative">
+              Open in Figma
+              <span className="absolute bottom-0 left-0 w-0 h-px bg-neutral-400 group-hover:w-full transition-all duration-300 ease-out" />
+            </span>
+            <svg 
+              className="w-3.5 h-3.5 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300 ease-out opacity-60 group-hover:opacity-100" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M7 17L17 7M17 7H7M17 7V17" />
+            </svg>
+          </a>
+        </div>
       </motion.div>
     );
   }
@@ -108,28 +189,33 @@ const GridCard = ({ item, index }: { item: any; index: number }) => {
             
             <div className="space-y-2 md:space-y-3">
               <p className="text-neutral-800 text-sm font-medium leading-snug">
-                The future of enterprise knowledge retrieval
+                From problem recognition to product solution
               </p>
               
               <p className="text-neutral-600 text-xs leading-relaxed">
-                Built to solve the fundamental problem: <span className="font-medium text-neutral-800">meaning vs. precision</span>. Traditional search fails when you need both semantic understanding and exact terminology.
+                After identifying the core issue, I conducted user interviews with law associates in Auckland to understand their workflows. The insight: navigating cases was a massive time sink requiring both <span className="font-medium text-neutral-800">accurate surfacing and intelligent digestion</span> of legal documents.
               </p>
               
               <div className="space-y-2">
                 <p className="text-neutral-700 text-[11px] leading-relaxed">
-                  <span className="font-semibold text-neutral-900">Hybrid RAG Architecture</span><br/>
-                  Combines BM25 sparse embeddings with dense vectors
+                  <span className="font-semibold text-neutral-900">Surface</span><br/>
+                  Hybrid RAG balances semantic similarity with keyword precision—critical in legal domains where terminology matters
                 </p>
                 
                 <p className="text-neutral-700 text-[11px] leading-relaxed">
-                  <span className="font-semibold text-neutral-900">Intelligent Weighting</span><br/>
-                  Balances context with keyword specificity
+                  <span className="font-semibold text-neutral-900">Digest</span><br/>
+                  At-a-glance summaries with contextual details and clickable citations
+                </p>
+                
+                <p className="text-neutral-700 text-[11px] leading-relaxed">
+                  <span className="font-semibold text-neutral-900">Action</span><br/>
+                  Direct navigation to relevant case sections via citation links
                 </p>
               </div>
               
               <div className="pt-2 border-t border-neutral-100">
                 <p className="text-neutral-500 text-[10px] font-medium uppercase tracking-wider">
-                  Vision: Enterprise knowledge that thinks
+                  Research → Prototype → Solution
                 </p>
               </div>
             </div>
@@ -164,7 +250,7 @@ const GridCard = ({ item, index }: { item: any; index: number }) => {
                 <div>
                   <p className="text-neutral-500 text-[10px] uppercase tracking-wider font-medium mb-1">Design Case Study</p>
                   <p className="text-neutral-700 text-[11px] leading-relaxed">
-                    Actual client work requiring <span className="font-medium text-neutral-800">aestheticism, legal sophistication, and refined color palette</span>. Typography carefully chosen: Inter for interface clarity, Georgia for document authenticity.
+                    Created aesthetics to match functional requirements: <span className="font-medium text-neutral-800">legal sophistication with modern usability</span>. The result provides maximum information density while maintaining scan-ability—citations are clickable and take users directly to relevant case sections.
                   </p>
                 </div>
                 
