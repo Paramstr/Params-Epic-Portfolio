@@ -72,7 +72,7 @@ export default function Portfolio() {
           </Link>
           <div className="flex flex-col items-end space-y-2 font-mono text-sm">
             <div>43.5320° S, 172.6306° E</div>
-            <Link href="/digital-resume">
+            <Link href="/resume">
               <motion.div
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
