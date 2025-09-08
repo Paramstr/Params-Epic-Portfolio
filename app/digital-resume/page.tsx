@@ -299,7 +299,7 @@ const GridCard = ({ item, index }: { item: any; index: number }) => {
 export default function DigitalResumePage() {
   return (
     <LenisProvider>
-      <main className="min-h-screen bg-neutral-100">
+      <main className="min-h-screen bg-transparent">
         
         {/* Hero Section */}
         <section className="min-h-screen flex flex-col justify-center px-4 md:px-8 lg:px-16">
