@@ -387,6 +387,21 @@ export default function DigitalResumePage() {
     <LenisProvider>
       <main className="min-h-screen bg-transparent">
         
+        {/* Digital Resume Title */}
+        <section className="pt-8 md:pt-12 pb-4 md:pb-6 px-4 md:px-8 lg:px-16">
+          <div className="text-center">
+            <motion.h1
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              className="text-neutral-500 font-mono text-sm md:text-base tracking-[0.15em] uppercase font-light"
+              style={{ fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace' }}
+            >
+              Digital Resume
+            </motion.h1>
+          </div>
+        </section>
+        
         {/* Hero Section */}
         <section className="min-h-screen flex flex-col justify-center px-4 md:px-8 lg:px-16">
           <div className="max-w-4xl">

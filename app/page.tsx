@@ -64,7 +64,7 @@ const lifeBlocks = [
 
 export default function Portfolio() {
   return (
-    <div className="min-h-screen bg-transparent text-black">
+    <div className="min-h-screen bg-white text-black relative z-20">
       <header className="fixed top-0 w-full bg-white/80 backdrop-blur-sm z-50">
         <div className="flex justify-between items-start px-6 py-4 max-w-7xl mx-auto">
           <Link href="/" className="font-mono text-sm">
@@ -72,6 +72,15 @@ export default function Portfolio() {
           </Link>
           <div className="flex flex-col items-end space-y-2 font-mono text-sm">
             <div>43.5320° S, 172.6306° E</div>
+            <Link href="/digital-resume">
+              <motion.div
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className="cursor-pointer"
+              >
+                Digital Resume
+              </motion.div>
+            </Link>
             <motion.a
               href="https://www.linkedin.com/in/parambir-singh-769736159/"
               target="_blank"
