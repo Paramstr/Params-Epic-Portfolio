@@ -397,7 +397,7 @@ export default function DigitalResumePage() {
               className="mb-6 md:mb-8"
             >
               <span className="text-neutral-400 text-sm tracking-[0.2em] uppercase">
-                Frame 3678
+                V 1.11.2077
               </span>
             </motion.div>
             
@@ -430,7 +430,7 @@ export default function DigitalResumePage() {
               transition={{ duration: 0.6, delay: 0.8 }}
               className="text-neutral-700 text-[clamp(1rem,2.5vw,1.1rem)] leading-[1.6] max-w-2xl"
             >
-              I care about building products that require a level of illness. An utter thanklessness of what it is, what it offers and completely in devotion to what it could be.
+              An engineer first, designer devoted to building experiences that invoke emotion in the age of AI.
             </motion.p>
           </div>
         </section>
