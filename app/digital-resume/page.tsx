@@ -87,92 +87,84 @@ const GridCard = ({ item, index }: { item: any; index: number }) => {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        {/* Clean grid layout */}
-        <div className="grid grid-cols-12 grid-rows-4 gap-3 h-full">
-          
-          {/* Main interface showcase */}
-          <div className="col-span-8 row-span-3 bg-white rounded-xl overflow-hidden border border-neutral-200/30 relative flex items-center justify-center">
-            <img 
-              src="/donna/searchbar.gif" 
-              alt="Donna Search Interface"
-              className="max-w-full max-h-full object-contain"
-            />
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-white/95 via-white/90 to-transparent p-4">
-              <div className="flex items-center gap-2 mb-1">
-                <img src="/donna/Logo.png" alt="Donna" className="h-4 opacity-80" />
-                <h3 className="text-black font-medium text-lg">Donna</h3>
-              </div>
-              <p className="text-neutral-600 text-sm">Hybrid RAG system for enterprise search</p>
+        {/* Tight masonry grid - content-aware layout */}
+        <div className="grid gap-3 h-full"
+             style={{
+               gridTemplateColumns: "2fr 1fr 1fr",
+               gridTemplateRows: "min-content auto 1fr",
+               gridTemplateAreas: `
+                 "logo description palette"
+                 "search description placeholder"
+                 "video video video"
+               `
+             }}>
+
+          {/* Logo card - large logo with overflow clipping */}
+          <div className="bg-black rounded-xl overflow-hidden border border-neutral-200/30 flex items-center justify-center"
+               style={{ gridArea: "logo" }}>
+            <img src="/donna/Logo.png" alt="Donna Logo" className="w-[150%] h-auto object-contain" />
+          </div>
+
+          {/* Description - tall content area */}
+          <div className="bg-white rounded-xl border border-neutral-200/30 p-4 flex flex-col justify-start"
+               style={{ gridArea: "description" }}>
+            <h4 className="text-neutral-900 font-medium text-sm mb-3">Donna</h4>
+            <p className="text-neutral-700 text-xs leading-relaxed">
+              A product created to show how effective RAG can be in a domain where semantic similarity can be leveraged while needing to retain the importance of specific words. A hybrid RAG system achieves this by weighting BM25 sparse embeddings with dense vector embeddings. The result is a retrieval system that balances between retrieving on meaning and frequency of words.
+            </p>
+          </div>
+
+          {/* Color palette - 4 rows filling container */}
+          <div className="rounded-xl border border-neutral-200/30  flex flex-col h-full"
+               style={{ gridArea: "palette" }}>
+            <div className="w-full h-full flex flex-col justify-between">
+              <div className="w-full flex-1 bg-[#FEFEFE] border border-neutral-200 rounded" />
+              <div className="w-full h-0.5 bg-white my-1" />
+              <div className="w-full flex-1 bg-[#000000] border border-neutral-200 rounded" />
+              <div className="w-full h-0.5 bg-white my-1" />
+              <div className="w-full flex-1 bg-[#2F504F] border border-neutral-200 rounded" />
+              <div className="w-full h-0.5 bg-white my-1" />
+              <div className="w-full flex-1 bg-[#D7D8D9] border border-neutral-200 rounded" />
             </div>
           </div>
 
-          {/* Color palette - clean and minimal */}
-          <div className="col-span-4 row-span-2 bg-white rounded-xl border border-neutral-200/30 p-4">
-            <h4 className="text-neutral-700 font-medium text-sm mb-3">Color Palette</h4>
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 bg-[#FEFEFE] border border-neutral-300 rounded-sm"></div>
-                <span className="text-xs font-mono text-neutral-600">#FEFEFE</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 bg-[#000000] border border-neutral-300 rounded-sm"></div>
-                <span className="text-xs font-mono text-neutral-600">#000000</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 bg-[#2F504F] border border-neutral-300 rounded-sm"></div>
-                <span className="text-xs font-mono text-neutral-600">#2F504F</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 bg-[#D7D8D9] border border-neutral-300 rounded-sm"></div>
-                <span className="text-xs font-mono text-neutral-600">#D7D8D9</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 bg-[#323232] border border-neutral-300 rounded-sm"></div>
-                <span className="text-xs font-mono text-neutral-600">#323232</span>
-              </div>
+          {/* Forest image - respecting 2:3 aspect ratio */}
+          <div className="bg-white rounded-xl border border-neutral-200/30 flex items-center justify-center"
+               style={{ gridArea: "placeholder" }}>
+            <div className="w-full aspect-[2/3]">
+              <img src="/donna/forest.png" alt="Forest" className="w-full h-full object-cover rounded" />
             </div>
           </div>
 
-          {/* Problem analysis */}
-          <div className="col-span-4 row-span-1 bg-white rounded-xl border border-neutral-200/30 p-3 flex items-center justify-center">
-            <img src="/donna/key issues.png" alt="Analysis" className="max-w-full max-h-full object-contain opacity-90" />
-          </div>
-
-          {/* Main flow video */}
-          <div className="col-span-4 row-span-2 bg-white rounded-xl overflow-hidden border border-neutral-200/30 relative flex items-center justify-center">
-            <video 
-              src="/donna/main-flow.mp4" 
-              autoPlay 
-              loop 
-              muted 
-              playsInline
-              className="max-w-full max-h-full object-contain"
-            />
-            <div className="absolute top-2 left-2 bg-black/60 backdrop-blur-sm px-2 py-1 rounded text-xs text-white">
-              Flow Demo
+          {/* Search Video - natural 16:10 ratio */}
+          <div className="bg-white rounded-xl overflow-hidden border border-neutral-200/30 relative flex items-center justify-center p-3"
+               style={{ gridArea: "search" }}>
+            <div className="w-full aspect-[16/10]">
+              <video
+                src="/donna/searchbar.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-contain"
+              />
             </div>
           </div>
 
-          {/* Key metrics */}
-          <div className="col-span-8 row-span-1 bg-neutral-50/80 rounded-xl p-4 flex items-center justify-between">
-            <div>
-              <h4 className="text-black font-medium text-sm mb-1">Hybrid Search Architecture</h4>
-              <p className="text-neutral-600 text-xs">BM25 + Dense Vector Embeddings for optimal retrieval accuracy</p>
+          {/* Video - spans full width bottom */}
+          <div className="bg-white rounded-xl overflow-hidden border border-neutral-200/30 relative flex items-center justify-center p-3"
+               style={{ gridArea: "video" }}>
+            <div className="w-full aspect-[16/9] rounded-xl">
+              <video
+                src="/donna/main-flow.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-contain "
+              />
             </div>
-            <div className="flex items-center gap-6 text-sm">
-              <div className="text-center">
-                <div className="font-semibold text-black">73%</div>
-                <div className="text-xs text-neutral-600">Accuracy</div>
-              </div>
-              <div className="text-center">
-                <div className="font-semibold text-black">&lt;200ms</div>
-                <div className="text-xs text-neutral-600">Response</div>
-              </div>
-              <div className="text-center">
-                <div className="font-semibold text-black">10M+</div>
-                <div className="text-xs text-neutral-600">Documents</div>
-              </div>
-            </div>
+            <div className="absolute top-2 left-2 bg-black/60 backdrop-blur-sm px-2 py-1 rounded text-xs text-white">Flow Demo</div>
           </div>
 
         </div>
