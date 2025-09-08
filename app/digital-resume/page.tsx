@@ -87,6 +87,30 @@ const GridCard = ({ item, index }: { item: any; index: number }) => {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
+        {/* Visit Link */}
+        <div className="flex justify-end mb-4">
+          <a 
+            href="https://www.donna.param.nz/research" 
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center gap-2 text-neutral-600 hover:text-neutral-900 transition-colors duration-300 text-sm font-medium"
+          >
+            <span className="relative">
+              Visit Donna Research
+              <span className="absolute bottom-0 left-0 w-0 h-px bg-neutral-400 group-hover:w-full transition-all duration-300 ease-out" />
+            </span>
+            <svg 
+              className="w-3.5 h-3.5 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300 ease-out opacity-70 group-hover:opacity-100" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M7 17L17 7M17 7H7M17 7V17" />
+            </svg>
+          </a>
+        </div>
+
         {/* Tight masonry grid - content-aware layout */}
         <div className="grid gap-3 h-full"
              style={{
@@ -106,12 +130,86 @@ const GridCard = ({ item, index }: { item: any; index: number }) => {
           </div>
 
           {/* Description - tall content area */}
-          <div className="bg-white rounded-xl border border-neutral-200/30 p-4 flex flex-col justify-start"
+          <div className="bg-white  rounded-xl border border-neutral-200/30 p-4 flex flex-col justify-start"
                style={{ gridArea: "description" }}>
-            <h4 className="text-neutral-900 font-medium text-sm mb-3">Donna</h4>
-            <p className="text-neutral-700 text-xs leading-relaxed">
-              A product created to show how effective RAG can be in a domain where semantic similarity can be leveraged while needing to retain the importance of specific words. A hybrid RAG system achieves this by weighting BM25 sparse embeddings with dense vector embeddings. The result is a retrieval system that balances between retrieving on meaning and frequency of words.
-            </p>
+            <div className="mb-4">
+              <h2 className="text-neutral-900 font-semibold text-2xl mb-1 leading-tight">Donna</h2>
+              <p className="text-neutral-500 text-xs uppercase tracking-wide font-medium">AI Search Reimagined</p>
+            </div>
+            
+            <div className="space-y-3">
+              <p className="text-neutral-800 text-sm font-medium leading-snug">
+                The future of enterprise knowledge retrieval
+              </p>
+              
+              <p className="text-neutral-600 text-xs leading-relaxed">
+                Built to solve the fundamental problem: <span className="font-medium text-neutral-800">meaning vs. precision</span>. Traditional search fails when you need both semantic understanding and exact terminology.
+              </p>
+              
+              <div className="space-y-2">
+                <p className="text-neutral-700 text-[11px] leading-relaxed">
+                  <span className="font-semibold text-neutral-900">Hybrid RAG Architecture</span><br/>
+                  Combines BM25 sparse embeddings with dense vectors
+                </p>
+                
+                <p className="text-neutral-700 text-[11px] leading-relaxed">
+                  <span className="font-semibold text-neutral-900">Intelligent Weighting</span><br/>
+                  Balances context with keyword specificity
+                </p>
+              </div>
+              
+              <div className="pt-2 border-t border-neutral-100">
+                <p className="text-neutral-500 text-[10px] font-medium uppercase tracking-wider">
+                  Vision: Enterprise knowledge that thinks
+                </p>
+              </div>
+            </div>
+            
+            {/* Quote Section */}
+            <div className="mt-6 pt-4 border-t border-neutral-100">
+              <div className="relative">
+                <svg className="absolute -top-1 -left-1 w-3 h-3 text-neutral-300" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z"/>
+                </svg>
+                <blockquote className="pl-4 pr-2">
+                  <p className="text-neutral-800 text-base font-medium leading-relaxed italic mb-2">
+                    "I wanted to eliminate the grunt work that buries lawyers. Too much time spent manually sifting through cases, page by tedious page."
+                  </p>
+                  <footer className="text-neutral-500 text-xs not-italic font-normal">
+                    — The problem that sparked Donna
+                  </footer>
+                </blockquote>
+              </div>
+            </div>
+            
+            {/* Client & Design Context */}
+            <div className="mt-6 pt-4 border-t border-neutral-100">
+              <div className="space-y-3">
+                <div>
+                  <p className="text-neutral-500 text-[10px] uppercase tracking-wider font-medium mb-1">Client</p>
+                  <p className="text-neutral-800 text-xs font-medium">
+                    Prototype for <span className="font-semibold">Ivo AI</span> — SF-based legal AI company
+                  </p>
+                </div>
+                
+                <div>
+                  <p className="text-neutral-500 text-[10px] uppercase tracking-wider font-medium mb-1">Design Case Study</p>
+                  <p className="text-neutral-700 text-[11px] leading-relaxed">
+                    Actual client work requiring <span className="font-medium text-neutral-800">aestheticism, legal sophistication, and refined color palette</span>. Typography carefully chosen: Inter for interface clarity, Georgia for document authenticity.
+                  </p>
+                </div>
+                
+                <div>
+                  <p className="text-neutral-500 text-[10px] uppercase tracking-wider font-medium mb-1">Tech Stack</p>
+                  <div className="flex flex-wrap gap-1">
+                    <span className="text-[10px] bg-neutral-100 text-neutral-700 px-2 py-0.5 rounded font-medium">Next.js</span>
+                    <span className="text-[10px] bg-neutral-100 text-neutral-700 px-2 py-0.5 rounded font-medium">React</span>
+                    <span className="text-[10px] bg-neutral-100 text-neutral-700 px-2 py-0.5 rounded font-medium">Upstash</span>
+                    <span className="text-[10px] bg-neutral-100 text-neutral-700 px-2 py-0.5 rounded font-medium">Supabase</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Color palette - 4 rows filling container */}
