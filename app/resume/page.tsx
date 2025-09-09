@@ -1,13 +1,205 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { LenisProvider } from "../components/LenisProvider";
 
 const gridItems = [
   { type: "project", id: "donna", title: "Donna", size: "medium", hasGif: true, hasCaption: true, description: "AI-powered RAG system combining semantic and lexical search for enterprise knowledge management." },
-  { type: "figma", id: "donna-figma", title: "OMNI - Bali", figmaUrl: "https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Fdesign%2Fl3MLIb0U9yFnRrLnhtlHb9%2FOmni-web-First-Draft--Param-%3Fm%3Dauto%26t%3DqOFOcBmYpB8I7QI6-1"}
+  { type: "figma", id: "donna-figma", title: "OMNI - Bali", figmaUrl: "https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Fdesign%2Fl3MLIb0U9yFnRrLnhtlHb9%2FOmni-web-First-Draft--Param-%3Fm%3Dauto%26t%3DqOFOcBmYpB8I7QI6-1"},
+  { type: "project", id: "chief-claude", title: "Chief Claude", size: "placeholder", hasCaption: true, description: "AI-powered executive assistant bringing strategic thinking to everyday tasks." }
 ];
+
+const TableOfContents = () => {
+  const [activeSection, setActiveSection] = useState("hero");
+  const [isVisible, setIsVisible] = useState(true);
+
+  const sections = [
+    { id: "hero", label: "Intro", number: "01" },
+    { id: "donna", label: "Donna AI", number: "02" },
+    { id: "omni", label: "Omni", number: "03" },
+    { id: "chief-claude", label: "Chief Claude", number: "04" },
+  ];
+
+  useEffect(() => {
+    let ticking = false;
+    let heroBottom = 0;
+    let sectionOffsets: { [key: string]: { top: number; bottom: number } } = {};
+
+    // Cache DOM queries and calculations
+    const cacheSections = () => {
+      const heroSection = document.getElementById("hero");
+      const donnaSection = document.getElementById("donna");
+      const omniSection = document.getElementById("omni");
+      const chiefClaudeSection = document.getElementById("chief-claude");
+      
+      if (heroSection) {
+        heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
+      }
+
+      if (donnaSection) {
+        sectionOffsets.donna = {
+          top: donnaSection.offsetTop,
+          bottom: donnaSection.offsetTop + donnaSection.offsetHeight
+        };
+      }
+      if (omniSection) {
+        sectionOffsets.omni = {
+          top: omniSection.offsetTop,
+          bottom: omniSection.offsetTop + omniSection.offsetHeight
+        };
+      }
+      if (chiefClaudeSection) {
+        sectionOffsets['chief-claude'] = {
+          top: chiefClaudeSection.offsetTop,
+          bottom: chiefClaudeSection.offsetTop + chiefClaudeSection.offsetHeight
+        };
+      }
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const scrollY = window.scrollY;
+
+          // Hide TOC logic
+          const lastOffset = sectionOffsets['chief-claude'] || sectionOffsets.omni || sectionOffsets.donna;
+          if (lastOffset) {
+            setIsVisible(scrollY < lastOffset.bottom + 200);
+          } else {
+            setIsVisible(scrollY < heroBottom + 1000);
+          }
+
+          // Update active section with cached offsets
+          if (scrollY < heroBottom - 300) {
+            setActiveSection("hero");
+          } else if (sectionOffsets.donna && scrollY < sectionOffsets.donna.bottom - 300) {
+            setActiveSection("donna");
+          } else if (sectionOffsets.omni && scrollY < sectionOffsets.omni.bottom - 300) {
+            setActiveSection("omni");
+          } else if (sectionOffsets['chief-claude'] && scrollY >= sectionOffsets['chief-claude'].top - 300) {
+            setActiveSection("chief-claude");
+          }
+
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    // Cache sections on mount and resize
+    cacheSections();
+    const handleResize = () => cacheSections();
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleResize, { passive: true });
+    
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ 
+        behavior: "smooth",
+        block: "start" 
+      });
+    }
+  };
+
+  if (!isVisible) return null;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 20 }}
+      transition={{ duration: 0.6, delay: 1.2 }}
+      className="fixed right-6 md:right-8 lg:right-12 top-1/2 -translate-y-1/2 z-30 hidden lg:block"
+    >
+      <div className="relative">
+        {/* Vertical line */}
+        <div className="absolute left-0 top-0 bottom-0 w-px bg-neutral-200"></div>
+        
+        {/* Active section indicator */}
+        <motion.div
+          className="absolute left-0 w-px bg-black"
+          style={{
+            height: "40px",
+          }}
+          animate={{
+            y: activeSection === "hero" ? 0 : 
+               activeSection === "donna" ? 80 :
+               activeSection === "omni" ? 160 :
+               activeSection === "chief-claude" ? 240 : 0,
+          }}
+          transition={{
+            type: "spring",
+            stiffness: 300,
+            damping: 30,
+          }}
+        />
+
+        <div className="pl-6 space-y-8">
+          {sections.map((section, index) => (
+            <motion.button
+              key={section.id}
+              onClick={() => scrollToSection(section.id)}
+              className="group block text-left relative"
+              whileHover={{ x: 4 }}
+              transition={{ type: "spring", stiffness: 400, damping: 25 }}
+            >
+              <div className="flex items-center gap-3">
+                <motion.span
+                  className={`font-mono text-xs tracking-wider transition-colors duration-300 ${
+                    activeSection === section.id
+                      ? "text-black font-medium"
+                      : "text-neutral-400 group-hover:text-neutral-600"
+                  }`}
+                >
+                  {section.number}
+                </motion.span>
+                <motion.span
+                  className={`text-sm font-medium transition-colors duration-300 ${
+                    activeSection === section.id
+                      ? "text-black"
+                      : "text-neutral-500 group-hover:text-neutral-700"
+                  }`}
+                >
+                  {section.label}
+                </motion.span>
+              </div>
+              
+              {/* Hover line animation */}
+              <motion.div
+                className="absolute -left-6 top-1/2 -translate-y-1/2 w-4 h-px bg-neutral-300 opacity-0 group-hover:opacity-100"
+                initial={{ scaleX: 0 }}
+                whileHover={{ scaleX: 1 }}
+                transition={{ duration: 0.2 }}
+              />
+            </motion.button>
+          ))}
+        </div>
+
+        {/* Decorative dot */}
+        <motion.div
+          className="absolute -left-1 bottom-0 w-2 h-2 bg-neutral-200 rounded-full"
+          animate={{
+            scale: [1, 1.2, 1],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      </div>
+    </motion.div>
+  );
+};
 
 const GridCard = ({ item, index }: { item: any; index: number }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -58,6 +250,7 @@ const GridCard = ({ item, index }: { item: any; index: number }) => {
     return (
       <motion.div
         key={item.id}
+        id="omni"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -138,6 +331,7 @@ const GridCard = ({ item, index }: { item: any; index: number }) => {
     return (
       <motion.div
         key={item.id}
+        id="donna"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -325,6 +519,67 @@ const GridCard = ({ item, index }: { item: any; index: number }) => {
     );
   }
 
+  // Chief Claude placeholder
+  if (item.id === "chief-claude") {
+    return (
+      <motion.div
+        key={item.id}
+        id="chief-claude"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: index * 0.1 }}
+        className="col-span-2 md:col-span-4 lg:col-span-6 xl:col-span-8 row-span-3 md:row-span-2 relative mt-16 md:mt-20 lg:mt-24"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <motion.div
+          className="h-full bg-gradient-to-br from-neutral-100 via-neutral-50 to-white rounded-2xl md:rounded-3xl overflow-hidden border border-neutral-200/80 relative flex items-center justify-center"
+          whileHover={{ 
+            scale: 1.01,
+            boxShadow: "0 20px 60px rgba(0,0,0,0.08)",
+          }}
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        >
+          {/* Coming Soon Content */}
+          <div className="text-center p-6 md:p-8 lg:p-12">
+            <motion.div
+              animate={{
+                scale: [1, 1.05, 1],
+                opacity: [0.7, 1, 0.7],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="mb-4"
+            >
+              <div className="w-16 h-16 md:w-20 md:h-20 mx-auto bg-gradient-to-br from-neutral-300 to-neutral-400 rounded-full flex items-center justify-center">
+                <svg className="w-8 h-8 md:w-10 md:h-10 text-neutral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+            </motion.div>
+            
+            <h3 className="text-xl md:text-2xl lg:text-3xl font-light text-neutral-900 tracking-tight mb-3">
+              {item.title}
+            </h3>
+            
+            <p className="text-neutral-600 text-sm md:text-base leading-relaxed mb-4 max-w-md mx-auto">
+              {item.description}
+            </p>
+            
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-100 text-neutral-700 rounded-full text-sm font-medium">
+              <div className="w-2 h-2 bg-neutral-400 rounded-full animate-pulse"></div>
+              Coming Soon
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
+    );
+  }
+
   return (
     <motion.div
       key={item.id}
@@ -403,7 +658,7 @@ export default function DigitalResumePage() {
         </section>
         
         {/* Hero Section */}
-        <section className="min-h-screen flex flex-col justify-center px-4 md:px-8 lg:px-16">
+        <section id="hero" className="min-h-screen flex flex-col justify-center px-4 md:px-8 lg:px-16 relative">
           <div className="max-w-4xl">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -448,10 +703,13 @@ export default function DigitalResumePage() {
               An engineer first, designer devoted to building experiences that invoke emotion in the age of AI.
             </motion.p>
           </div>
+          
+          {/* Table of Contents */}
+          <TableOfContents />
         </section>
 
         {/* Dynamic Grid Section */}
-        <section className="py-12 md:py-16 lg:py-24 px-4 md:px-8 lg:px-16 overflow-hidden">
+        <section id="projects" className="py-12 md:py-16 lg:py-24 px-4 md:px-8 lg:px-16 overflow-hidden">
           <div className="max-w-[100vw] md:max-w-[120vw] mx-auto">
             <div className="
               grid gap-3 md:gap-4 lg:gap-6 xl:gap-8
