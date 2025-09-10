@@ -12,10 +12,17 @@ export function LenisProvider({ children }: { children: React.ReactNode }) {
         const { default: Lenis } = await import("lenis");
         
         lenis = new Lenis({
-          duration: 1.2,
-          easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          duration: 0.2,
+          easing: (t: number) => t,
           smoothWheel: true,
           smoothTouch: false,
+          lerp: 0.08,
+          infinite: false,
+          orientation: 'vertical',
+          gestureOrientation: 'vertical',
+          touchMultiplier: 1,
+          wheelMultiplier: 0.8,
+          normalizeWheel: true,
         });
 
         const raf = (time: number) => {
