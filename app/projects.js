@@ -1,5 +1,19 @@
 export const projects = [
   {
+    name: "BuildClub.ai",
+    categories: ['Work', 'Design Engineering', 'AI'],
+    description: 'Reimagining AI interfaces beyond chat. Creating personable, functionally aesthetic experiences for Lovable, Manus, Lindy AI, and Gumloop AI.',
+    year: '2025 — PRESENT',
+    link: 'https://buildclub.ai',
+  },
+  {
+    name: "Ahana Studios",
+    categories: ['Work', 'AI', 'Design'],
+    description: 'AI and design studio. Crafted precision nutrition system for Southeast Asia\'s premier luxury wellness brand, serving 1000+ daily users.',
+    year: '2025 — PRESENT',
+    link: 'https://ahanastudios.com',
+  },
+  {
     name: "Detection of Armillaria Root Rot Using ML Classification of Multispectral Data",
     categories: ['Research', 'Computer Vision', 'Spectral Analysis'],
     description: 'Engineering Honours research project using modified ResNet50 to detect Armillaria root rot in cherry trees through multi-spectral imaging analysis (RGB + NIR bands). The system processes aerial imagery to identify early signs of disease.',

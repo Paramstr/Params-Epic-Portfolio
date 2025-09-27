@@ -141,7 +141,7 @@ export default function Portfolio() {
               <div>SYSTEMS ENGINEER · MULTIDISCIPLINARY DESIGNER</div>
             </div>
             {projects.map((project, index) => (
-              <motion.div key={index} className="mt-4" initial="hidden" whileHover="visible">
+              <motion.div key={index} className="mt-4">
                 <div className="text-gray-500">{project.year}</div>
                 <div className="flex items-center">
                   <span>{project.name}</span>
@@ -166,23 +166,16 @@ export default function Portfolio() {
                     </Link>
                   )}
                 </div>
-                <motion.div
-                  variants={{
-                    hidden: { opacity: 0, height: 0 },
-                    visible: { opacity: 1, height: "auto" },
-                  }}
-                  transition={{ duration: 0.3 }}
-                  className="mt-2 text-sm text-gray-600 overflow-hidden"
-                >
+                <div className="mt-2 text-sm text-gray-400">
                   <p>{project.description}</p>
                   <div className="mt-2">
                     {project.categories.map((category, idx) => (
-                      <span key={idx} className="mr-2 text-xs text-gray-400">
+                      <span key={idx} className="mr-2 text-xs text-gray-300">
                         #{category}
                       </span>
                     ))}
                   </div>
-                </motion.div>
+                </div>
               </motion.div>
             ))}
           </motion.div>
