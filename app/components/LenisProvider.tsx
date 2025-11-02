@@ -1,32 +1,47 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, createContext, useContext, useState } from "react";
+
+type LenisContextType = {
+  lenis: any;
+};
+
+const LenisContext = createContext<LenisContextType>({ lenis: null });
+
+export const useLenis = () => useContext(LenisContext);
 
 export function LenisProvider({ children }: { children: React.ReactNode }) {
+  const [lenis, setLenis] = useState<any>(null);
+
   useEffect(() => {
-    let lenis: any;
+    // Lenis is disabled - returning early
+    return;
+    
+    let lenisInstance: any;
     let rafId: number;
 
     (async () => {
       try {
         const { default: Lenis } = await import("lenis");
         
-        lenis = new Lenis({
-          duration: 0.2,
-          easing: (t: number) => t,
+        lenisInstance = new Lenis({
+          duration: 1.2,
+          easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
           smoothWheel: true,
           smoothTouch: false,
-          lerp: 0.08,
+          lerp: 0.1,
           infinite: false,
           orientation: 'vertical',
           gestureOrientation: 'vertical',
           touchMultiplier: 1,
-          wheelMultiplier: 0.8,
+          wheelMultiplier: 1,
           normalizeWheel: true,
         });
 
+        setLenis(lenisInstance);
+
         const raf = (time: number) => {
-          lenis.raf(time);
+          lenisInstance.raf(time);
           rafId = requestAnimationFrame(raf);
         };
         
@@ -38,10 +53,14 @@ export function LenisProvider({ children }: { children: React.ReactNode }) {
 
     return () => {
       if (rafId) cancelAnimationFrame(rafId);
-      lenis?.destroy();
+      lenisInstance?.destroy();
     };
   }, []);
 
-  return <>{children}</>;
+  return (
+    <LenisContext.Provider value={{ lenis }}>
+      {children}
+    </LenisContext.Provider>
+  );
 }
 

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { LenisProvider } from "../components/LenisProvider";
+import { LenisProvider, useLenis } from "../components/LenisProvider";
 
 const gridItems = [
   { type: "project", id: "donna", title: "Donna", size: "medium", hasGif: true, hasCaption: true, description: "AI-powered RAG system combining semantic and lexical search for enterprise knowledge management." },
@@ -13,6 +13,7 @@ const gridItems = [
 const TableOfContents = () => {
   const [activeSection, setActiveSection] = useState("hero");
   const [isVisible, setIsVisible] = useState(true);
+  const { lenis } = useLenis();
 
   const sections = [
     { id: "hero", label: "Intro", number: "01" },
@@ -22,90 +23,60 @@ const TableOfContents = () => {
   ];
 
   useEffect(() => {
-    let ticking = false;
-    let heroBottom = 0;
-    let sectionOffsets: { [key: string]: { top: number; bottom: number } } = {};
-
-    // Cache DOM queries and calculations
-    const cacheSections = () => {
-      const heroSection = document.getElementById("hero");
-      const donnaSection = document.getElementById("donna");
-      const omniSection = document.getElementById("omni");
-      const chiefClaudeSection = document.getElementById("chief-claude");
-      
-      if (heroSection) {
-        heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
-      }
-
-      if (donnaSection) {
-        sectionOffsets.donna = {
-          top: donnaSection.offsetTop,
-          bottom: donnaSection.offsetTop + donnaSection.offsetHeight
-        };
-      }
-      if (omniSection) {
-        sectionOffsets.omni = {
-          top: omniSection.offsetTop,
-          bottom: omniSection.offsetTop + omniSection.offsetHeight
-        };
-      }
-      if (chiefClaudeSection) {
-        sectionOffsets['chief-claude'] = {
-          top: chiefClaudeSection.offsetTop,
-          bottom: chiefClaudeSection.offsetTop + chiefClaudeSection.offsetHeight
-        };
-      }
+    // Use IntersectionObserver for section detection
+    const observerOptions = {
+      rootMargin: "-30% 0px -50% 0px",
+      threshold: 0
     };
 
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    }, observerOptions);
+
+    // Observe all sections
+    sections.forEach(({ id }) => {
+      const element = document.getElementById(id);
+      if (element) observer.observe(element);
+    });
+
+    // Simple visibility check
     const handleScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          const scrollY = window.scrollY;
-
-          // Hide TOC logic
-          const lastOffset = sectionOffsets['chief-claude'] || sectionOffsets.omni || sectionOffsets.donna;
-          if (lastOffset) {
-            setIsVisible(scrollY < lastOffset.bottom + 200);
-          } else {
-            setIsVisible(scrollY < heroBottom + 1000);
-          }
-
-          // Update active section with cached offsets
-          if (scrollY < heroBottom - 300) {
-            setActiveSection("hero");
-          } else if (sectionOffsets.donna && scrollY < sectionOffsets.donna.bottom - 300) {
-            setActiveSection("donna");
-          } else if (sectionOffsets.omni && scrollY < sectionOffsets.omni.bottom - 300) {
-            setActiveSection("omni");
-          } else if (sectionOffsets['chief-claude'] && scrollY >= sectionOffsets['chief-claude'].top - 300) {
-            setActiveSection("chief-claude");
-          }
-
-          ticking = false;
-        });
-        ticking = true;
-      }
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      
+      // Hide when near bottom
+      setIsVisible(scrollY < documentHeight - windowHeight - 300);
     };
-
-    // Cache sections on mount and resize
-    cacheSections();
-    const handleResize = () => cacheSections();
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleResize, { passive: true });
     
     return () => {
+      observer.disconnect();
       window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
   const scrollToSection = (sectionId: string) => {
+    if (!lenis) return;
+    
     const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ 
-        behavior: "smooth",
-        block: "start" 
+      const currentScroll = window.scrollY;
+      const targetScroll = element.offsetTop;
+      const distance = Math.abs(targetScroll - currentScroll);
+      
+      // Scale duration based on distance, but cap it
+      const duration = Math.min(Math.max(0.8, distance / 2000), 2);
+      
+      lenis.scrollTo(element, {
+        offset: 0,
+        duration,
+        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
       });
     }
   };
@@ -131,10 +102,7 @@ const TableOfContents = () => {
             height: "40px",
           }}
           animate={{
-            y: activeSection === "hero" ? 0 : 
-               activeSection === "donna" ? 80 :
-               activeSection === "omni" ? 160 :
-               activeSection === "chief-claude" ? 240 : 0,
+            y: sections.findIndex(s => s.id === activeSection) * 80
           }}
           transition={{
             type: "spring",
@@ -336,10 +304,19 @@ const GridCard = ({ item, index }: { item: any; index: number }) => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6, delay: index * 0.1 }}
-        className="col-span-2 md:col-span-4 lg:col-span-6 xl:col-span-8 row-span-6 md:row-span-4 relative"
+        className="col-span-2 md:col-span-4 lg:col-span-6 xl:col-span-8 row-span-6 md:row-span-4 relative mt-16 md:mt-20 lg:mt-24"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
+        {/* Title Section */}
+        <div className="mb-6 md:mb-8">
+          <h3 className="text-2xl md:text-3xl font-light text-neutral-900 tracking-tight">{item.title}</h3>
+          <div className="flex items-center gap-2 mt-2">
+            <div className="w-1 h-1 bg-neutral-400 rounded-full"></div>
+            <p className="text-sm text-neutral-500 font-medium tracking-wide uppercase">AI-Powered Legal Research</p>
+          </div>
+        </div>
+
         {/* Visit Link */}
         <div className="flex justify-end mb-4">
           <a 
@@ -637,97 +614,103 @@ const GridCard = ({ item, index }: { item: any; index: number }) => {
   );
 };
 
+function DigitalResumeContent() {
+  return (
+    <main className="min-h-screen bg-transparent">
+      
+      {/* Digital Resume Title */}
+      <section className="pt-8 md:pt-12 pb-4 md:pb-6 px-4 md:px-8 lg:px-16">
+        <div className="text-center">
+          <motion.h1
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="text-neutral-500 font-mono text-sm md:text-base tracking-[0.15em] uppercase font-light"
+            style={{ fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace' }}
+          >
+            Digital Resume
+          </motion.h1>
+        </div>
+      </section>
+      
+      {/* Hero Section */}
+      <section id="hero" className="min-h-screen flex flex-col justify-center px-4 md:px-8 lg:px-16 relative">
+        <div className="max-w-4xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="mb-6 md:mb-8"
+          >
+            <span className="text-neutral-400 text-sm tracking-[0.2em] uppercase">
+              V 1.11.2077
+            </span>
+          </motion.div>
+          
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="mb-12 md:mb-16"
+          >
+            <h1 className="text-black font-normal text-[clamp(1.2rem,4vw,1.5rem)] leading-[1.2] mb-2">
+              Param
+            </h1>
+            <h2 className="text-black font-normal text-[clamp(1.2rem,4vw,1.5rem)] leading-[1.2]">
+              Product Engineer
+            </h2>
+          </motion.div>
+          
+          <motion.h3 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            className="text-black font-normal text-[clamp(2rem,8vw,5rem)] leading-[1.1] tracking-[-0.02em] mb-8 md:mb-12 max-w-3xl"
+          >
+            Interfaces that feel like art.
+          </motion.h3>
+          
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.8 }}
+            className="text-neutral-700 text-[clamp(1rem,2.5vw,1.1rem)] leading-[1.6] max-w-2xl"
+          >
+            An engineer first, designer devoted to building experiences that invoke emotion in the age of AI.
+          </motion.p>
+        </div>
+        
+        {/* Table of Contents */}
+        <TableOfContents />
+      </section>
+
+      {/* Dynamic Grid Section */}
+      <section id="projects" className="py-12 md:py-16 lg:py-24 px-4 md:px-8 lg:px-16 overflow-hidden">
+        <div className="max-w-[100vw] md:max-w-[120vw] mx-auto">
+          <div className="
+            grid gap-3 md:gap-4 lg:gap-6 xl:gap-8
+            grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8
+            auto-rows-[minmax(100px,auto)]
+            md:auto-rows-[minmax(140px,auto)]
+            lg:auto-rows-[minmax(160px,auto)]
+          ">
+            {gridItems.map((item, index) => (
+              <GridCard key={item.id} item={item} index={index} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Footer Space */}
+      <div className="h-32 md:h-48"></div>
+    </main>
+  );
+}
+
 export default function DigitalResumePage() {
   return (
     <LenisProvider>
-      <main className="min-h-screen bg-transparent">
-        
-        {/* Digital Resume Title */}
-        <section className="pt-8 md:pt-12 pb-4 md:pb-6 px-4 md:px-8 lg:px-16">
-          <div className="text-center">
-            <motion.h1
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-              className="text-neutral-500 font-mono text-sm md:text-base tracking-[0.15em] uppercase font-light"
-              style={{ fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace' }}
-            >
-              Digital Resume
-            </motion.h1>
-          </div>
-        </section>
-        
-        {/* Hero Section */}
-        <section id="hero" className="min-h-screen flex flex-col justify-center px-4 md:px-8 lg:px-16 relative">
-          <div className="max-w-4xl">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="mb-6 md:mb-8"
-            >
-              <span className="text-neutral-400 text-sm tracking-[0.2em] uppercase">
-                V 1.11.2077
-              </span>
-            </motion.div>
-            
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="mb-12 md:mb-16"
-            >
-              <h1 className="text-black font-normal text-[clamp(1.2rem,4vw,1.5rem)] leading-[1.2] mb-2">
-                Param
-              </h1>
-              <h2 className="text-black font-normal text-[clamp(1.2rem,4vw,1.5rem)] leading-[1.2]">
-                Product Engineer
-              </h2>
-            </motion.div>
-            
-            <motion.h3 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
-              className="text-black font-normal text-[clamp(2rem,8vw,5rem)] leading-[1.1] tracking-[-0.02em] mb-8 md:mb-12 max-w-3xl"
-            >
-              Interfaces that feel natural.
-            </motion.h3>
-            
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.8 }}
-              className="text-neutral-700 text-[clamp(1rem,2.5vw,1.1rem)] leading-[1.6] max-w-2xl"
-            >
-              An engineer first, designer devoted to building experiences that invoke emotion in the age of AI.
-            </motion.p>
-          </div>
-          
-          {/* Table of Contents */}
-          <TableOfContents />
-        </section>
-
-        {/* Dynamic Grid Section */}
-        <section id="projects" className="py-12 md:py-16 lg:py-24 px-4 md:px-8 lg:px-16 overflow-hidden">
-          <div className="max-w-[100vw] md:max-w-[120vw] mx-auto">
-            <div className="
-              grid gap-3 md:gap-4 lg:gap-6 xl:gap-8
-              grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8
-              auto-rows-[minmax(100px,auto)]
-              md:auto-rows-[minmax(140px,auto)]
-              lg:auto-rows-[minmax(160px,auto)]
-            ">
-              {gridItems.map((item, index) => (
-                <GridCard key={item.id} item={item} index={index} />
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Footer Space */}
-        <div className="h-32 md:h-48"></div>
-      </main>
+      <DigitalResumeContent />
     </LenisProvider>
   );
 }
