@@ -50,34 +50,65 @@ export default function Portfolio() {
         </div>
       </header>
 
-      <main className="pt-32 px-6 max-w-[1440px] mx-auto">
-        {/* Header Section */}
-        <div className="grid md:grid-cols-2 gap-24 mb-16">
-          <motion.div
-            className="space-y-8"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            {/* Title */}
-            <h1 className="text-4xl md:text-4xl font-normal text-gray-900 leading-tight mb-4">
-              I'm <span className="font-bold">Param</span>, a systems engineer who{" "}
-              <span className="italic">designs</span>.
-            </h1>
+      <main className="pt-32">
+        {/* Main Content Section - Constrained Width */}
+        <div className="max-w-[1440px] mx-auto px-6">
+          {/* Header Section */}
+          <div className="grid md:grid-cols-2 gap-24 mb-16">
+            <motion.div
+              className="space-y-8"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              {/* Title */}
+              <h1 className="text-4xl md:text-4xl font-normal text-gray-900 leading-tight mb-4">
+                I'm <span className="font-bold">Param</span>, a systems engineer who{" "}
+                <span className="italic">designs</span>.
+              </h1>
 
-            {/* Work Experience, Projects, Research Section */}
+              {/* Work Experience, Projects, Research Section */}
             <div className="mb-24 max-w-2xl">
               <div className="space-y-6 text-xs font-mono">
                 {/* Work Experience */}
                 <div className="space-y-1">
                   <h3 className="text-gray-400 uppercase tracking-wide text-xs mb-2">Work Experience</h3>
-                  {workExperience.map((work, index) => (
-                    <div key={index} className="flex justify-between items-center">
-                      <span className="text-gray-500 w-28 flex-shrink-0">{work.dateRange || work.yearDisplay || work.year}</span>
-                      <span className="flex-1 text-left">{work.company}</span>
-                      <span className="text-gray-500 text-right">{work.tag}</span>
-                    </div>
-                  ))}
+                  {workExperience.map((work, index) => {
+                    const RowComponent = work.url ? motion.a : motion.div;
+                    const rowProps = work.url ? {
+                      href: work.url,
+                      target: "_blank",
+                      rel: "noopener noreferrer"
+                    } : {};
+                    
+                    return (
+                      <RowComponent 
+                        key={index} 
+                        className="flex justify-between items-center py-1 px-2 -mx-2 rounded cursor-pointer hover:bg-gray-50 transition-colors duration-200 group"
+                        whileHover={{ x: 2 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                        {...rowProps}
+                      >
+                        <span className="text-gray-500 w-28 flex-shrink-0">{work.dateRange || work.yearDisplay || work.year}</span>
+                        <span className="flex-1 text-left">{work.company}</span>
+                        <div className="flex items-center gap-1">
+                          <span className="text-gray-500 text-right">{work.tag}</span>
+                          <div className="w-3 h-3 flex items-center justify-center">
+                            {work.url && (
+                              <svg 
+                                className="w-3 h-3 text-gray-400" 
+                                fill="none" 
+                                stroke="currentColor" 
+                                viewBox="0 0 24 24"
+                              >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M17 7H7M17 7V17" />
+                              </svg>
+                            )}
+                          </div>
+                        </div>
+                      </RowComponent>
+                    );
+                  })}
                 </div>
 
                 <div className="border-t border-gray-200"></div>
@@ -85,13 +116,42 @@ export default function Portfolio() {
                 {/* Projects */}
                 <div className="space-y-1">
                   <h3 className="text-gray-400 uppercase tracking-wide text-xs mb-2">Projects</h3>
-                  {projects.map((project, index) => (
-                    <div key={index} className="flex justify-between items-center">
-                      <span className="text-gray-500 w-12">{project.year}</span>
-                      <span className="flex-1 text-left">{project.name}</span>
-                      <span className="text-gray-500 text-right">{project.tag}</span>
-                    </div>
-                  ))}
+                  {projects.map((project, index) => {
+                    const RowComponent = project.url ? motion.a : motion.div;
+                    const rowProps = project.url ? {
+                      href: project.url,
+                      target: "_blank",
+                      rel: "noopener noreferrer"
+                    } : {};
+                    
+                    return (
+                      <RowComponent 
+                        key={index} 
+                        className="flex justify-between items-center py-1 px-2 -mx-2 rounded cursor-pointer hover:bg-gray-50 transition-colors duration-200 group"
+                        whileHover={{ x: 2 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                        {...rowProps}
+                      >
+                        <span className="text-gray-500 w-12">{project.year}</span>
+                        <span className="flex-1 text-left">{project.name}</span>
+                        <div className="flex items-center gap-1">
+                          <span className="text-gray-500 text-right">{project.tag}</span>
+                          <div className="w-3 h-3 flex items-center justify-center">
+                            {project.url && (
+                              <svg 
+                                className="w-3 h-3 text-gray-400" 
+                                fill="none" 
+                                stroke="currentColor" 
+                                viewBox="0 0 24 24"
+                              >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M17 7H7M17 7V17" />
+                              </svg>
+                            )}
+                          </div>
+                        </div>
+                      </RowComponent>
+                    );
+                  })}
                 </div>
 
                 <div className="border-t border-gray-200"></div>
@@ -99,13 +159,42 @@ export default function Portfolio() {
                 {/* Research */}
                 <div className="space-y-1">
                   <h3 className="text-gray-400 uppercase tracking-wide text-xs mb-2">Research</h3>
-                  {research.map((item, index) => (
-                    <div key={index} className="flex justify-between items-center">
-                      <span className="text-gray-500 w-12">{item.year}</span>
-                      <span className="flex-1 text-left">{item.name}</span>
-                      <span className="text-gray-500 text-right">{item.tag}</span>
-                    </div>
-                  ))}
+                  {research.map((item, index) => {
+                    const RowComponent = item.url ? motion.a : motion.div;
+                    const rowProps = item.url ? {
+                      href: item.url,
+                      target: "_blank",
+                      rel: "noopener noreferrer"
+                    } : {};
+                    
+                    return (
+                      <RowComponent 
+                        key={index} 
+                        className="flex justify-between items-center py-1 px-2 -mx-2 rounded cursor-pointer hover:bg-gray-50 transition-colors duration-200 group"
+                        whileHover={{ x: 2 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                        {...rowProps}
+                      >
+                        <span className="text-gray-500 w-12">{item.year}</span>
+                        <span className="flex-1 text-left">{item.name}</span>
+                        <div className="flex items-center gap-1">
+                          <span className="text-gray-500 text-right">{item.tag}</span>
+                          <div className="w-3 h-3 flex items-center justify-center">
+                            {item.url && (
+                              <svg 
+                                className="w-3 h-3 text-gray-400" 
+                                fill="none" 
+                                stroke="currentColor" 
+                                viewBox="0 0 24 24"
+                              >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M17 7H7M17 7V17" />
+                              </svg>
+                            )}
+                          </div>
+                        </div>
+                      </RowComponent>
+                    );
+                  })}
                 </div>
 
                 <div className="border-t border-gray-200"></div>
@@ -113,13 +202,42 @@ export default function Portfolio() {
                 {/* Design */}
                 <div className="space-y-1">
                   <h3 className="text-gray-400 uppercase tracking-wide text-xs mb-2">Design</h3>
-                  {design.map((item, index) => (
-                    <div key={index} className="flex justify-between items-center">
-                      <span className="text-gray-500 w-12">{item.year}</span>
-                      <span className="flex-1 text-left">{item.name}</span>
-                      <span className="text-gray-500 text-right">{item.tag}</span>
-                    </div>
-                  ))}
+                  {design.map((item, index) => {
+                    const RowComponent = item.url ? motion.a : motion.div;
+                    const rowProps = item.url ? {
+                      href: item.url,
+                      target: "_blank",
+                      rel: "noopener noreferrer"
+                    } : {};
+                    
+                    return (
+                      <RowComponent 
+                        key={index} 
+                        className="flex justify-between items-center py-1 px-2 -mx-2 rounded cursor-pointer hover:bg-gray-50 transition-colors duration-200 group"
+                        whileHover={{ x: 2 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                        {...rowProps}
+                      >
+                        <span className="text-gray-500 w-12">{item.year}</span>
+                        <span className="flex-1 text-left">{item.name}</span>
+                        <div className="flex items-center gap-1">
+                          <span className="text-gray-500 text-right">{item.tag}</span>
+                          <div className="w-3 h-3 flex items-center justify-center">
+                            {item.url && (
+                              <svg 
+                                className="w-3 h-3 text-gray-400" 
+                                fill="none" 
+                                stroke="currentColor" 
+                                viewBox="0 0 24 24"
+                              >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M17 7H7M17 7V17" />
+                              </svg>
+                            )}
+                          </div>
+                        </div>
+                      </RowComponent>
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -162,31 +280,58 @@ export default function Portfolio() {
             </p>
           </div>
         </motion.div>
+        </div>
 
-        {/* Project Cards Section */}
-        <motion.div 
-          className="grid md:grid-cols-2 gap-12 mb-32 max-w-full"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.6 }}
-        >
-          {/* Project Card 1 */}
+        {/* Project Cards Section - Wider Container */}
+        <div className="max-w-[1900px] mx-auto px-6">
+          {/* Project Title */}
           <motion.div
-            className="group cursor-pointer"
-            whileHover={{ scale: 1.02 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.4 }}
+            className="mb-3"
+          >
+            <h2 className="text-xs font-bold text-black font-mono mb-1">
+              Donna AI - Legal Research AI System
+            </h2>
+            <p className="text-xs text-gray-500 font-mono">
+              legal research with semantic and lexical search capabilities, grounding in truth.
+            </p>
+          </motion.div>
+
+          <motion.div 
+            className="grid md:grid-cols-2 gap-12 mb-32"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 1.6 }}
+          >
+          {/* Project Card 1 - Donna AI */}
+          <motion.a
+            href="https://www.donna.param.nz/research"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group cursor-pointer block"
+            whileHover={{ scale: 1.00 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
           >
             <div className="aspect-[3/2] bg-gray-100 rounded-lg overflow-hidden border border-gray-200 hover:border-gray-300 transition-colors duration-300">
-              <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
-                <span className="text-gray-500 font-mono text-xs">Project GIF Placeholder</span>
-              </div>
+              <video 
+                src="/donna/searchbar.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                controls={false}
+                className="w-full h-full object-cover"
+                style={{ pointerEvents: 'none' }}
+              />
             </div>
-          </motion.div>
+          </motion.a>
 
           {/* Project Card 2 */}
           <motion.div
             className="group cursor-pointer"
-            whileHover={{ scale: 1.02 }}
+            whileHover={{ scale: 1.00 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
           >
             <div className="aspect-[3/2] bg-gray-100 rounded-lg overflow-hidden border border-gray-200 hover:border-gray-300 transition-colors duration-300">
@@ -195,7 +340,8 @@ export default function Portfolio() {
               </div>
             </div>
           </motion.div>
-        </motion.div>
+          </motion.div>
+        </div>
 
       </main>
     </div>

@@ -5,7 +5,8 @@ export const workExperience = [
     dateRange: 'Aug — Nov \'25',
     company: 'Build Club',
     role: 'Product Intern',
-    tag: 'Product Intern'
+    tag: 'Product Intern',
+    url: 'https://buildclub.ai'
   },
   {
     year: '2025',
@@ -13,7 +14,8 @@ export const workExperience = [
     dateRange: 'Jun — Present',
     company: 'Ahana Studios',
     role: 'Co-founder',
-    tag: 'Founded'
+    tag: 'Founded',
+    url: 'https://ahanastudios.com'
   },
   {
     year: '2025',
@@ -21,7 +23,8 @@ export const workExperience = [
     dateRange: 'Feb — May \'25',
     company: 'Stanley Street',
     role: 'Product Intern',
-    tag: 'Product Intern'
+    tag: 'Product Intern',
+    url: 'https://www.stanleyst.nz/'
   },
   {
     year: '2024',
@@ -29,7 +32,8 @@ export const workExperience = [
     dateRange: 'Nov — Aug \'24',
     company: 'UI Rev',
     role: 'Machine Learning Intern',
-    tag: 'ML Intern'
+    tag: 'ML Intern',
+    url: 'https://www.uirev.com/'
   }
 ];
 
@@ -40,7 +44,8 @@ export const projects = [
     description: 'Agent-based law case retrieval system using AI to analyze and retrieve relevant legal precedents and case law.',
     year: '2025',
     section: 'projects',
-    tag: 'Legal Agent'
+    tag: 'Legal Agent',
+    url: 'https://www.donna.param.nz/research'
   },
   {
     name: "Sahha LLM Health Analyst",
@@ -74,6 +79,7 @@ export const research = [
     section: 'research',
     tag: 'ML Classification',
     highlight: true,
+    url: 'https://ssl.linklings.net/conferences/acra/acra2024_proceedings/views/includes/files/pap160s2.pdf',
     longDescription: `Using a custom-modified ResNet50 architecture, this research project achieved 94% accuracy in early detection of Armillaria root rot in cherry orchards. The system processes multi-spectral imagery (RGB + NIR) captured by UAVs to identify subtle spectral signatures associated with early-stage infection.
 
     Key achievements:
@@ -104,7 +110,8 @@ export const design = [
     description: 'Custom hieroglyphic symbol system combining modern minimalism with ancient Egyptian aesthetics for contemporary brand applications.',
     year: '2024',
     section: 'design',
-    tag: 'Typography'
+    tag: 'Typography',
+    url: '#'
   },
   {
     name: "Quantum Interface",
