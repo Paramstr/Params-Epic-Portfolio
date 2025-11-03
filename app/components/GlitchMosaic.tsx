@@ -31,6 +31,7 @@ const GLITCH_IMAGES = [
 ]
 
 const TRANSITION_MS = 400
+const TILE_COOLDOWN_MS = 600
 
 interface GlitchMosaicProps {
   baseImage?: string
@@ -65,6 +66,7 @@ export default function GlitchMosaic({
   )
   const [activeTiles, setActiveTiles] = useState<Set<number>>(new Set())
   const transitionTimeouts = useRef<Map<number, number>>(new Map())
+  const lastUpdatedRef = useRef<number[]>([])
 
   useEffect(() => {
     transitionTimeouts.current.forEach(timeoutId => clearTimeout(timeoutId))
@@ -73,6 +75,7 @@ export default function GlitchMosaic({
     setTileImages(Array.from({ length: totalTiles }, () => baseImage))
     setTileVersions(Array.from({ length: totalTiles }, () => 0))
     setActiveTiles(() => new Set())
+    lastUpdatedRef.current = Array.from({ length: totalTiles }, () => 0)
   }, [totalTiles, baseImage])
 
   useEffect(() => {
@@ -86,58 +89,86 @@ export default function GlitchMosaic({
     return glitchPool[Math.floor(Math.random() * glitchPool.length)]
   }, [glitchPool])
 
+  const replaceTile = useCallback(
+    (tileIndex: number, { force = false }: { force?: boolean } = {}) => {
+      if (tileIndex < 0 || tileIndex >= totalTiles) return
+
+      const now = Date.now()
+      const lastUpdated = lastUpdatedRef.current[tileIndex] ?? 0
+
+      if (!force && now - lastUpdated < TILE_COOLDOWN_MS) {
+        return
+      }
+
+      setTileImages(prev => {
+        if (prev.length !== totalTiles) {
+          return Array.from({ length: totalTiles }, () => baseImage)
+        }
+
+        const next = [...prev]
+        let nextImage = getRandomGlitchImage()
+        let guard = 0
+
+        while (nextImage === prev[tileIndex] && glitchPool.length > 1 && guard < 6) {
+          nextImage = getRandomGlitchImage()
+          guard += 1
+        }
+
+        next[tileIndex] = nextImage
+        return next
+      })
+
+      setTileVersions(prev => {
+        const baseline =
+          prev.length === totalTiles ? [...prev] : Array.from({ length: totalTiles }, () => 0)
+        baseline[tileIndex] = (baseline[tileIndex] ?? 0) + 1
+        return baseline
+      })
+
+      setActiveTiles(prev => {
+        const next = new Set(prev)
+        next.add(tileIndex)
+        return next
+      })
+
+      const existingTimeout = transitionTimeouts.current.get(tileIndex)
+      if (existingTimeout) {
+        clearTimeout(existingTimeout)
+      }
+
+      const timeoutId = window.setTimeout(() => {
+        setActiveTiles(prev => {
+          const next = new Set(prev)
+          next.delete(tileIndex)
+          return next
+        })
+        transitionTimeouts.current.delete(tileIndex)
+      }, TRANSITION_MS)
+
+      transitionTimeouts.current.set(tileIndex, timeoutId)
+      lastUpdatedRef.current[tileIndex] = now
+    },
+    [baseImage, getRandomGlitchImage, glitchPool.length, totalTiles]
+  )
+
   const glitchRandomTile = useCallback(() => {
     if (totalTiles === 0) return
 
-    const tileIndex = Math.floor(Math.random() * totalTiles)
+    const now = Date.now()
+    const eligible: number[] = []
 
-    setTileImages(prev => {
-      if (prev.length !== totalTiles) {
-        return Array.from({ length: totalTiles }, () => baseImage)
+    for (let i = 0; i < totalTiles; i += 1) {
+      const lastUpdated = lastUpdatedRef.current[i] ?? 0
+      if (now - lastUpdated >= TILE_COOLDOWN_MS) {
+        eligible.push(i)
       }
-
-      const next = [...prev]
-      let nextImage = getRandomGlitchImage()
-      let guard = 0
-
-      while (nextImage === prev[tileIndex] && glitchPool.length > 1 && guard < 6) {
-        nextImage = getRandomGlitchImage()
-        guard += 1
-      }
-
-      next[tileIndex] = nextImage
-      return next
-    })
-
-    setTileVersions(prev => {
-      const baseline =
-        prev.length === totalTiles ? [...prev] : Array.from({ length: totalTiles }, () => 0)
-      baseline[tileIndex] = (baseline[tileIndex] ?? 0) + 1
-      return baseline
-    })
-
-    setActiveTiles(prev => {
-      const next = new Set(prev)
-      next.add(tileIndex)
-      return next
-    })
-
-    const existingTimeout = transitionTimeouts.current.get(tileIndex)
-    if (existingTimeout) {
-      clearTimeout(existingTimeout)
     }
 
-    const timeoutId = window.setTimeout(() => {
-      setActiveTiles(prev => {
-        const next = new Set(prev)
-        next.delete(tileIndex)
-        return next
-      })
-      transitionTimeouts.current.delete(tileIndex)
-    }, TRANSITION_MS)
+    if (eligible.length === 0) return
 
-    transitionTimeouts.current.set(tileIndex, timeoutId)
-  }, [baseImage, getRandomGlitchImage, glitchPool.length, totalTiles])
+    const tileIndex = eligible[Math.floor(Math.random() * eligible.length)]
+    replaceTile(tileIndex)
+  }, [replaceTile, totalTiles])
 
   useEffect(() => {
     if (totalTiles === 0) return
@@ -171,6 +202,13 @@ export default function GlitchMosaic({
 
   const activeTileArray = useMemo(() => Array.from(activeTiles), [activeTiles])
 
+  const handleTileHover = useCallback(
+    (index: number) => {
+      replaceTile(index, { force: true })
+    },
+    [replaceTile]
+  )
+
   return (
     <div
       className={`relative w-full bg-gray-100 rounded-md overflow-hidden ${className}`}
@@ -189,7 +227,11 @@ export default function GlitchMosaic({
           const versionKey = `${index}-${tileVersions[index] ?? 0}`
 
           return (
-            <div key={index} className="relative w-full h-full min-h-0 min-w-0">
+            <div
+              key={index}
+              className="relative w-full h-full min-h-0 min-w-0"
+              onMouseEnter={() => handleTileHover(index)}
+            >
               <div
                 key={versionKey}
                 className={`absolute inset-0${isActive ? " tile-fade-in" : ""}`}

@@ -61,7 +61,7 @@ export default function Portfolio() {
             {/* Title */}
             <h1 className="text-4xl md:text-4xl font-normal text-gray-900 leading-tight mb-4">
               I'm <span className="font-bold">Param</span>, a systems engineer who{" "}
-              <span className="italic">builds</span>.
+              <span className="italic">designs</span>.
             </h1>
 
             {/* Work Experience, Projects, Research Section */}
