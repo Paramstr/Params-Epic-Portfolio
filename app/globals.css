@@ -41,5 +41,34 @@ body {
         "video video video";
     }
   }
+
+  .tile-fade-in {
+    opacity: 0;
+    animation: tileFadeIn 0.4s ease forwards;
+  }
+
+  .tile-line-fade {
+    opacity: 0.6;
+    animation: tileLineFade 0.4s ease forwards;
+  }
 }
 
+@keyframes tileFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes tileLineFade {
+  from {
+    opacity: 0.6;
+  }
+  to {
+    opacity: 0;
+  }
+}

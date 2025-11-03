@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback, useMemo } from "react"
+import { useState, useEffect, useCallback, useMemo, useRef } from "react"
 
 const DEFAULT_BASE_IMAGE = "/param-mj/param-mj-1.png"
 
@@ -30,6 +30,8 @@ const GLITCH_IMAGES = [
   "/param-mj/25.png",
 ]
 
+const TRANSITION_MS = 400
+
 interface GlitchMosaicProps {
   baseImage?: string
   gridCols?: number
@@ -44,7 +46,7 @@ export default function GlitchMosaic({
   multiple = 2,
   gridCols = 3*multiple,
   gridRows = 4*multiple,
-  animationInterval = 100,
+  animationInterval = 1000,
   className = "",
 }: GlitchMosaicProps) {
   const totalTiles = gridCols * gridRows
@@ -58,10 +60,27 @@ export default function GlitchMosaic({
   const [tileImages, setTileImages] = useState<string[]>(() =>
     Array.from({ length: totalTiles }, () => baseImage)
   )
+  const [tileVersions, setTileVersions] = useState<number[]>(() =>
+    Array.from({ length: totalTiles }, () => 0)
+  )
+  const [activeTiles, setActiveTiles] = useState<Set<number>>(new Set())
+  const transitionTimeouts = useRef<Map<number, number>>(new Map())
 
   useEffect(() => {
+    transitionTimeouts.current.forEach(timeoutId => clearTimeout(timeoutId))
+    transitionTimeouts.current.clear()
+
     setTileImages(Array.from({ length: totalTiles }, () => baseImage))
+    setTileVersions(Array.from({ length: totalTiles }, () => 0))
+    setActiveTiles(() => new Set())
   }, [totalTiles, baseImage])
+
+  useEffect(() => {
+    return () => {
+      transitionTimeouts.current.forEach(timeoutId => clearTimeout(timeoutId))
+      transitionTimeouts.current.clear()
+    }
+  }, [])
 
   const getRandomGlitchImage = useCallback(() => {
     return glitchPool[Math.floor(Math.random() * glitchPool.length)]
@@ -89,6 +108,35 @@ export default function GlitchMosaic({
       next[tileIndex] = nextImage
       return next
     })
+
+    setTileVersions(prev => {
+      const baseline =
+        prev.length === totalTiles ? [...prev] : Array.from({ length: totalTiles }, () => 0)
+      baseline[tileIndex] = (baseline[tileIndex] ?? 0) + 1
+      return baseline
+    })
+
+    setActiveTiles(prev => {
+      const next = new Set(prev)
+      next.add(tileIndex)
+      return next
+    })
+
+    const existingTimeout = transitionTimeouts.current.get(tileIndex)
+    if (existingTimeout) {
+      clearTimeout(existingTimeout)
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setActiveTiles(prev => {
+        const next = new Set(prev)
+        next.delete(tileIndex)
+        return next
+      })
+      transitionTimeouts.current.delete(tileIndex)
+    }, TRANSITION_MS)
+
+    transitionTimeouts.current.set(tileIndex, timeoutId)
   }, [baseImage, getRandomGlitchImage, glitchPool.length, totalTiles])
 
   useEffect(() => {
@@ -109,10 +157,19 @@ export default function GlitchMosaic({
       const x = gridCols === 1 ? "50%" : `${(col / (gridCols - 1)) * 100}%`
       const y = gridRows === 1 ? "50%" : `${(row / (gridRows - 1)) * 100}%`
 
-      return { x, y }
+      const corners = {
+        topLeft: { x: col, y: row },
+        topRight: { x: col + 1, y: row },
+        bottomLeft: { x: col, y: row + 1 },
+        bottomRight: { x: col + 1, y: row + 1 },
+      }
+
+      return { backgroundX: x, backgroundY: y, corners }
     },
     [gridCols, gridRows]
   )
+
+  const activeTileArray = useMemo(() => Array.from(activeTiles), [activeTiles])
 
   return (
     <div
@@ -127,22 +184,47 @@ export default function GlitchMosaic({
         }}
       >
         {tileImages.map((imageSrc, index) => {
-          const { x, y } = resolvePosition(index)
+          const position = resolvePosition(index)
+          const isActive = activeTiles.has(index)
+          const versionKey = `${index}-${tileVersions[index] ?? 0}`
+
           return (
             <div key={index} className="relative w-full h-full min-h-0 min-w-0">
               <div
-                className="absolute inset-0"
+                key={versionKey}
+                className={`absolute inset-0${isActive ? " tile-fade-in" : ""}`}
                 style={{
                   backgroundImage: `url(${imageSrc})`,
                   backgroundSize,
-                  backgroundPosition: `${x} ${y}`,
+                  backgroundPosition: `${position.backgroundX} ${position.backgroundY}`,
                   backgroundRepeat: "no-repeat",
+                  opacity: isActive ? undefined : 1,
                 }}
               />
             </div>
           )
         })}
       </div>
+      {activeTileArray.length > 0 && (
+        <svg
+          className="pointer-events-none absolute inset-0"
+          viewBox={`0 0 ${gridCols} ${gridRows}`}
+          preserveAspectRatio="none"
+        >
+          {activeTileArray.map(index => {
+            const { corners } = resolvePosition(index)
+            const versionKey = `${index}-${tileVersions[index] ?? 0}`
+            return (
+              <g key={`lines-${versionKey}`} className="tile-line-fade">
+                <path d={`M 0 0 L ${corners.topLeft.x} ${corners.topLeft.y}`} stroke="#ffffff" strokeWidth={0.01} strokeLinecap="round" fill="none" />
+                <path d={`M ${gridCols} 0 L ${corners.topRight.x} ${corners.topRight.y}`} stroke="#ffffff" strokeWidth={0.01} strokeLinecap="round" fill="none" />
+                <path d={`M 0 ${gridRows} L ${corners.bottomLeft.x} ${corners.bottomLeft.y}`} stroke="#ffffff" strokeWidth={0.01} strokeLinecap="round" fill="none" />
+                <path d={`M ${gridCols} ${gridRows} L ${corners.bottomRight.x} ${corners.bottomRight.y}`} stroke="#ffffff" strokeWidth={0.01} strokeLinecap="round" fill="none" />
+              </g>
+            )
+          })}
+        </svg>
+      )}
     </div>
   )
 }
