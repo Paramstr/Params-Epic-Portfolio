@@ -47,7 +47,7 @@ export default function GlitchMosaic({
   multiple = 2,
   gridCols = 3*multiple,
   gridRows = 4*multiple,
-  animationInterval = 1000,
+  animationInterval = 400,
   className = "",
 }: GlitchMosaicProps) {
   const totalTiles = gridCols * gridRows
