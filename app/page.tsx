@@ -3,6 +3,7 @@
 import { motion } from "framer-motion"
 import Link from "next/link"
 import GlitchMosaic from "./components/GlitchMosaic"
+import { workExperience, projects, research, design } from "./projects.js"
 
 
 export default function Portfolio() {
@@ -70,21 +71,13 @@ export default function Portfolio() {
                 {/* Work Experience */}
                 <div className="space-y-1">
                   <h3 className="text-gray-400 uppercase tracking-wide text-xs mb-2">Work Experience</h3>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-500 w-12">2025</span>
-                    <span className="flex-1 text-left">Ahana Studios</span>
-                    <span className="text-gray-500 text-right">Product Design Intern</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-500 w-12">2024</span>
-                    <span className="flex-1 text-left">University of Canterbury</span>
-                    <span className="text-gray-500 text-right">Software Engineering</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-500 w-12">2023</span>
-                    <span className="flex-1 text-left">Freelance</span>
-                    <span className="text-gray-500 text-right">Product + Engineering</span>
-                  </div>
+                  {workExperience.map((work, index) => (
+                    <div key={index} className="flex justify-between items-center">
+                      <span className="text-gray-500 w-28 flex-shrink-0">{work.dateRange || work.yearDisplay || work.year}</span>
+                      <span className="flex-1 text-left">{work.company}</span>
+                      <span className="text-gray-500 text-right">{work.tag}</span>
+                    </div>
+                  ))}
                 </div>
 
                 <div className="border-t border-gray-200"></div>
@@ -92,21 +85,13 @@ export default function Portfolio() {
                 {/* Projects */}
                 <div className="space-y-1">
                   <h3 className="text-gray-400 uppercase tracking-wide text-xs mb-2">Projects</h3>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-500 w-12">2024</span>
-                    <span className="flex-1 text-left">Detection of Armillaria Root Rot</span>
-                    <span className="text-gray-500 text-right">ML Classification</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-500 w-12">2024</span>
-                    <span className="flex-1 text-left">Sahha LLM Health Analysis</span>
-                    <span className="text-gray-500 text-right">Large Language Models</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-500 w-12">2024</span>
-                    <span className="flex-1 text-left">Edge Device Invoice Extraction</span>
-                    <span className="text-gray-500 text-right">Offline LLMs</span>
-                  </div>
+                  {projects.map((project, index) => (
+                    <div key={index} className="flex justify-between items-center">
+                      <span className="text-gray-500 w-12">{project.year}</span>
+                      <span className="flex-1 text-left">{project.name}</span>
+                      <span className="text-gray-500 text-right">{project.tag}</span>
+                    </div>
+                  ))}
                 </div>
 
                 <div className="border-t border-gray-200"></div>
@@ -114,11 +99,27 @@ export default function Portfolio() {
                 {/* Research */}
                 <div className="space-y-1">
                   <h3 className="text-gray-400 uppercase tracking-wide text-xs mb-2">Research</h3>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-500 w-12">2023</span>
-                    <span className="flex-1 text-left">Autonomous Line-Following Robot</span>
-                    <span className="text-gray-500 text-right">Path Planning</span>
-                  </div>
+                  {research.map((item, index) => (
+                    <div key={index} className="flex justify-between items-center">
+                      <span className="text-gray-500 w-12">{item.year}</span>
+                      <span className="flex-1 text-left">{item.name}</span>
+                      <span className="text-gray-500 text-right">{item.tag}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="border-t border-gray-200"></div>
+
+                {/* Design */}
+                <div className="space-y-1">
+                  <h3 className="text-gray-400 uppercase tracking-wide text-xs mb-2">Design</h3>
+                  {design.map((item, index) => (
+                    <div key={index} className="flex justify-between items-center">
+                      <span className="text-gray-500 w-12">{item.year}</span>
+                      <span className="flex-1 text-left">{item.name}</span>
+                      <span className="text-gray-500 text-right">{item.tag}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>

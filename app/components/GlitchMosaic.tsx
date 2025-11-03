@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo, useRef } from "react"
 
-const DEFAULT_BASE_IMAGE = "/param-mj/param-mj-1.png"
+const DEFAULT_BASE_IMAGE = "/param-mj/1.png"
 
 const GLITCH_IMAGES = [
   "/param-mj/2.png",
@@ -28,6 +28,7 @@ const GLITCH_IMAGES = [
   "/param-mj/23.png",
   "/param-mj/24.png",
   "/param-mj/25.png",
+  "/param-mj/26.png",
 ]
 
 const TRANSITION_MS = 400
