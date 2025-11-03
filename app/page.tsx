@@ -5,27 +5,86 @@ import Link from "next/link"
 import GlitchMosaic from "./components/GlitchMosaic"
 import { workExperience, projects, research, design } from "./projects.js"
 
+const PrecisionNutritionAnimation = () => {
+  const emojiRows = [
+    ["🥑", "🥦", "🍎", "🥕", "🍇", "🥒", "🍓", "🥗", "🥭", "🫐", "🍌", "🍊"],
+    ["🍎", "🥗", "🥕", "🥦", "🍋", "🥑", "🍊", "🥒", "🍠", "🍉", "🥒", "🍍"],
+    ["🥕", "🥬", "🍇", "🥑", "🍅", "🥗", "🍍", "🥒", "🍌", "🍓", "🍇", "🥭"],
+    ["🍉", "🥒", "🥗", "🍇", "🍎", "🥑", "🥬", "🍍", "🍊", "🫐", "🥬", "🍋"],
+    ["🍊", "🥑", "🥕", "🍓", "🥬", "🍇", "🍌", "🥗", "🥒", "🍍", "🍓", "🍎"],
+    ["🍇", "🍉", "🍊", "🥦", "🥕", "🍓", "🥭", "🍍", "🥬", "🍌", "🥒", "🍊"],
+    ["🥬", "🍇", "🍉", "🥑", "🍓", "🍎", "🥦", "🍍", "🍌", "🥗", "🍋", "🥒"],
+    ["🍎", "🥒", "🥑", "🍇", "🥕", "🥗", "🍉", "🍌", "🥭", "🍓", "🍍", "🥬"],
+    ["🥒", "🍌", "🍊", "🥦", "🍍", "🍑", "🥬", "🍇", "🍎", "🥗", "🍉", "🍋"],
+    ["🍋", "🥥", "🥕", "🍊", "🍇", "🥒", "🥑", "🍉", "🥭", "🥬", "🥗", "🍍"],
+  ]
+
+  return (
+    <div className="relative h-full w-full bg-white">
+      <div className="absolute inset-0 overflow-hidden">
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            inset: "-45%",
+            transform: "rotate(12deg) scale(1.18)",
+            transformOrigin: "center",
+          }}
+        >
+          {emojiRows.map((row, rowIndex) => {
+            const copies = 4
+            const stream = Array.from({ length: row.length * copies }, (_, idx) => row[idx % row.length])
+            const duration = 16 - rowIndex * 0.6
+            const travel = -(100 / copies)
+
+            return (
+              <div
+                key={rowIndex}
+                className="absolute overflow-hidden"
+                style={{
+                  top: `${rowIndex * 8}%`,
+                  left: "-30%",
+                  width: "160%",
+                  height: "4.25rem",
+                }}
+              >
+                <motion.div
+                  className="flex gap-8 text-[40px] sm:text-[48px] text-emerald-600/90 whitespace-nowrap"
+                  animate={{ x: ["0%", `${travel}%`] }}
+                  transition={{
+                    duration,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                  style={{ willChange: "transform", transform: "translate3d(0,0,0)" }}
+                >
+                  {stream.map((emoji, emojiIndex) => (
+                    <span key={`${rowIndex}-${emojiIndex}`} className="select-none">
+                      {emoji}
+                    </span>
+                  ))}
+                </motion.div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 
 export default function Portfolio() {
 
   return (
     <div className="min-h-screen bg-white text-black relative z-20">
       <header className="fixed top-0 w-full bg-white/80 backdrop-blur-sm z-50">
-        <div className="flex justify-between items-center px-4 py-2 max-w-7xl mx-auto">
+        <div className="flex justify-between items-center px-4 py-2 max-w-[1440px] mx-auto">
           <Link href="/" className="font-mono text-xs">
             P·S
           </Link>
           <div className="flex items-center space-x-4 font-mono text-xs">
             <div className="text-gray-500">43.5320° S, 172.6306° E</div>
-            <Link href="/resume">
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="cursor-pointer hover:text-gray-600"
-              >
-                Resume
-              </motion.div>
-            </Link>
+
             <motion.a
               href="https://www.linkedin.com/in/parambir-singh-769736159/"
               target="_blank"
@@ -264,19 +323,16 @@ export default function Portfolio() {
         >
           <div className="space-y-6">
             <p className="text-gray-500 leading-relaxed text-xs font-mono">
-              I spend my time thinking about the intersection of technology and human experience. There's something fascinating about how the right interface can make complex systems feel intuitive, how thoughtful design can turn frustration into delight. 
+              I’m a computer engineer who spends most mornings asking how the tricks we perfected for tweets and trades can be reused for proteins and power grids.  Bits feel mostly solved; atoms still need work.
             </p>
+
             <p className="text-gray-500 leading-relaxed text-xs font-mono">
-              My curiosity drives me toward problems that sit at the boundary between disciplines—where engineering rigor meets creative expression, where technical constraints become design opportunities. I'm drawn to building things that feel both powerful and approachable.
+              While ChatGPT was still a lab demo I was shipping one of the first offline LLM runtimes to iOS production.  I later trained a deep-learning model to spot cellular death in multispectral imagery (work done through Jones), and now I’m turning cheap olfaction sensor arrays into early-warning systems for chronic disease by reading metabolic signatures on breath.
             </p>
           </div>
-          
-          <div className="space-y-6">
+          <div>
             <p className="text-gray-500 leading-relaxed text-xs font-mono">
-              Currently, I'm motivated by the potential of AI to augment human creativity rather than replace it. I believe the most interesting solutions emerge when we deeply understand both the technical possibilities and the human context they serve.
-            </p>
-            <p className="text-gray-500 leading-relaxed text-xs font-mono">
-              When I'm not building, you'll find me exploring how different mediums—from typography to interaction design—can communicate ideas more effectively. Good design, to me, is invisible until you notice how much better everything feels.
+              I look for roles that let me stay cross-disciplinary, talk to domain experts, and ship work that matters.  I’m happiest when I’m learning something new and turning it into code or hardware other people can use.
             </p>
           </div>
         </motion.div>
@@ -284,20 +340,6 @@ export default function Portfolio() {
 
         {/* Project Cards Section - Wider Container */}
         <div className="max-w-[1900px] mx-auto px-6">
-          {/* Project Title */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 1.4 }}
-            className="mb-3"
-          >
-            <h2 className="text-xs font-bold text-black font-mono mb-1">
-              Donna AI - Legal Research AI System
-            </h2>
-            <p className="text-xs text-gray-500 font-mono">
-              legal research with semantic and lexical search capabilities, grounding in truth.
-            </p>
-          </motion.div>
 
           <motion.div 
             className="grid md:grid-cols-2 gap-12 mb-32"
@@ -306,40 +348,56 @@ export default function Portfolio() {
             transition={{ duration: 0.8, delay: 1.6 }}
           >
           {/* Project Card 1 - Donna AI */}
-          <motion.a
-            href="https://www.donna.param.nz/research"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group cursor-pointer block"
-            whileHover={{ scale: 1.00 }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          >
-            <div className="aspect-[3/2] bg-gray-100 rounded-lg overflow-hidden border border-gray-200 hover:border-gray-300 transition-colors duration-300">
-              <video 
-                src="/donna/searchbar.mp4"
-                autoPlay
-                loop
-                muted
-                playsInline
-                controls={false}
-                className="w-full h-full object-cover"
-                style={{ pointerEvents: 'none' }}
-              />
+          <div className="space-y-5">
+            <div className="space-y-2 text-xs font-mono text-gray-500">
+              <h3 className="text-base text-black font-semibold tracking-tight font-sans">
+                Donna AI – Legal Research System
+              </h3>
+              <p className="text-[11px] leading-relaxed text-gray-600">
+                Donna brings semantic and lexical search into one command surface for legal teams, grounding every answer and surfacing precedent faster than traditional tooling.
+              </p>
             </div>
-          </motion.a>
+            <motion.a
+              href="https://www.donna.param.nz/research"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group cursor-pointer block"
+              whileHover={{ scale: 1.00 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            >
+              <div className="aspect-[3/2] bg-gray-100 rounded-lg overflow-hidden border border-gray-200 hover:border-gray-300 transition-colors duration-300">
+                <video
+                  src="/donna/searchbar.mp4"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  controls={false}
+                  className="w-full h-full object-cover"
+                  style={{ pointerEvents: 'none' }}
+                />
+              </div>
+            </motion.a>
+          </div>
 
           {/* Project Card 2 */}
-          <motion.div
-            className="group cursor-pointer"
-            whileHover={{ scale: 1.00 }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          >
-            <div className="aspect-[3/2] bg-gray-100 rounded-lg overflow-hidden border border-gray-200 hover:border-gray-300 transition-colors duration-300">
-              <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
-                <span className="text-gray-500 font-mono text-xs">Project GIF Placeholder</span>
-              </div>
+          <div className="space-y-5">
+            <div className="space-y-2 text-xs font-mono text-gray-500">
+              <h3 className="text-base text-black font-semibold tracking-tight font-sans">AHANA Studios builds Omni.</h3>
+              <p className="text-[11px] leading-relaxed text-gray-600">
+                Omni is a frontier longevity wellness space. We shipped a precision nutrition platform for 1,000+ members to collaborate with doctors and nutritionists, plan meals, and track macros with scientific specificity—while giving over 100 staff a calm control surface that anchors the organisation’s core operations.
+              </p>
             </div>
-          </motion.div>
+            <motion.div
+              className="group cursor-pointer"
+              whileHover={{ scale: 1.00 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            >
+              <div className="aspect-[3/2] rounded-lg overflow-hidden border border-gray-200 hover:border-gray-300 transition-colors duration-300 shadow-sm">
+                <PrecisionNutritionAnimation />
+              </div>
+            </motion.div>
+          </div>
           </motion.div>
         </div>
 
