@@ -1,4 +1,5 @@
 import "./globals.css"
+import { ThemeProvider } from "@/components/theme-provider"
 import { Space_Mono, Inter, Bebas_Neue } from "next/font/google"
 
 const mono = Space_Mono({
@@ -24,11 +25,16 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${mono.variable} ${sans.variable} ${bebasNeue.variable}`}>
-      <body>
-        {children}
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${mono.variable} ${sans.variable} ${bebasNeue.variable}`}
+    >
+      <body className="bg-white text-black antialiased dark:bg-neutral-950 dark:text-gray-100">
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   )
 }
-

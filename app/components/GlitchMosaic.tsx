@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo, useRef } from "react"
 
-const DEFAULT_BASE_IMAGE = "/param-mj/param.JPG"
+const DEFAULT_BASE_IMAGE = "/param-mj/1.png"
 
 const GLITCH_IMAGES = [
   "/param-mj/1.png",
@@ -30,6 +30,7 @@ const GLITCH_IMAGES = [
   "/param-mj/24.png",
   "/param-mj/25.png",
   "/param-mj/26.png",
+  //"/param-mj/param.png",
 ]
 
 const TRANSITION_MS = 400
@@ -213,7 +214,7 @@ export default function GlitchMosaic({
 
   return (
     <div
-      className={`relative w-full bg-gray-100 rounded-md overflow-hidden ${className}`}
+      className={`relative w-full rounded-md bg-gray-100 transition-colors duration-300 dark:bg-neutral-900 ${className}`}
       style={{ aspectRatio, minHeight: 240 }}
     >
       <div
