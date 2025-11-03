@@ -50,7 +50,7 @@ export default function Portfolio() {
         </div>
       </header>
 
-      <main className="pt-32 px-6 max-w-7xl mx-auto">
+      <main className="pt-32 px-6 max-w-[1440px] mx-auto">
         {/* Header Section */}
         <div className="grid md:grid-cols-2 gap-24 mb-16">
           <motion.div
@@ -137,6 +137,65 @@ export default function Portfolio() {
           </motion.div>
         </div>
 
+        {/* Personal Introduction Section */}
+        <motion.div 
+          className="grid md:grid-cols-2 gap-12 mb-32 max-w-full"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.4 }}
+        >
+          <div className="space-y-6">
+            <p className="text-gray-500 leading-relaxed text-xs font-mono">
+              I spend my time thinking about the intersection of technology and human experience. There's something fascinating about how the right interface can make complex systems feel intuitive, how thoughtful design can turn frustration into delight. 
+            </p>
+            <p className="text-gray-500 leading-relaxed text-xs font-mono">
+              My curiosity drives me toward problems that sit at the boundary between disciplines—where engineering rigor meets creative expression, where technical constraints become design opportunities. I'm drawn to building things that feel both powerful and approachable.
+            </p>
+          </div>
+          
+          <div className="space-y-6">
+            <p className="text-gray-500 leading-relaxed text-xs font-mono">
+              Currently, I'm motivated by the potential of AI to augment human creativity rather than replace it. I believe the most interesting solutions emerge when we deeply understand both the technical possibilities and the human context they serve.
+            </p>
+            <p className="text-gray-500 leading-relaxed text-xs font-mono">
+              When I'm not building, you'll find me exploring how different mediums—from typography to interaction design—can communicate ideas more effectively. Good design, to me, is invisible until you notice how much better everything feels.
+            </p>
+          </div>
+        </motion.div>
+
+        {/* Project Cards Section */}
+        <motion.div 
+          className="grid md:grid-cols-2 gap-12 mb-32 max-w-full"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.6 }}
+        >
+          {/* Project Card 1 */}
+          <motion.div
+            className="group cursor-pointer"
+            whileHover={{ scale: 1.02 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          >
+            <div className="aspect-[3/2] bg-gray-100 rounded-lg overflow-hidden border border-gray-200 hover:border-gray-300 transition-colors duration-300">
+              <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
+                <span className="text-gray-500 font-mono text-xs">Project GIF Placeholder</span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Project Card 2 */}
+          <motion.div
+            className="group cursor-pointer"
+            whileHover={{ scale: 1.02 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          >
+            <div className="aspect-[3/2] bg-gray-100 rounded-lg overflow-hidden border border-gray-200 hover:border-gray-300 transition-colors duration-300">
+              <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
+                <span className="text-gray-500 font-mono text-xs">Project GIF Placeholder</span>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
 
       </main>
     </div>

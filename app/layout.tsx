@@ -1,6 +1,5 @@
 import "./globals.css"
 import { Space_Mono, Inter, Bebas_Neue } from "next/font/google"
-import InteractiveGridBackground from "./components/InteractiveGridBackground"
 
 const mono = Space_Mono({
   subsets: ["latin"],
@@ -27,10 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${mono.variable} ${sans.variable} ${bebasNeue.variable}`}>
       <body>
-        <InteractiveGridBackground />
-        <div className="relative z-10">
-          {children}
-        </div>
+        {children}
       </body>
     </html>
   )
